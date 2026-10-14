@@ -21,10 +21,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final AuditLogService auditLogService;
+    private final com.acme.salarymgmt.service.SalaryService salaryService;
 
-    public EmployeeController(EmployeeService employeeService, AuditLogService auditLogService) {
+    public EmployeeController(EmployeeService employeeService, AuditLogService auditLogService, com.acme.salarymgmt.service.SalaryService salaryService) {
         this.employeeService = employeeService;
         this.auditLogService = auditLogService;
+        this.salaryService = salaryService;
     }
 
     @GetMapping
@@ -98,7 +100,7 @@ public class EmployeeController {
 
     @GetMapping("/{employeeId}/salary-history")
     public ResponseEntity<List<com.acme.salarymgmt.service.SalaryService.SalarySummaryResponse>> salaryHistory(
-            @PathVariable Long employeeId, com.acme.salarymgmt.service.SalaryService salaryService) {
+            @PathVariable Long employeeId) {
         var history = salaryService.getSalaryHistory(employeeId);
         return ResponseEntity.ok(history);
     }

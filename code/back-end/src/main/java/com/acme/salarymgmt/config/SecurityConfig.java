@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .sessionFixation().none()
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/health").permitAll()
+                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/auth/me", "/api/v1/health").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(sessionAuthFilter(), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
