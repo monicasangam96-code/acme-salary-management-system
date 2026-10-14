@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACME Salary Management System — Product Presentation</title>
+<style>
+  :root {
+    --primary: #0d6efd;
+    --dark: #212529;
+    --light: #f8f9fa;
+    --gray: #6c757d;
+    --green: #198754;
+    --orange: #fd7e14;
+    --purple: #6f42c1;
+    --red: #dc3545;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--dark);
+    color: white;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Slide container */
+  .slides { width: 100%; height: 100vh; position: relative; }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 100px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: translateX(60px);
+  }
+  .slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+
+  /* Slide backgrounds */
+  .slide:nth-child(odd) { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+  .slide:nth-child(even) { background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%); }
+
+  h1 { font-size: 3.2em; margin-bottom: 12px; font-weight: 700; }
+  h2 { font-size: 2.4em; margin-bottom: 20px; font-weight: 600; border-left: 5px solid var(--primary); padding-left: 20px; }
+  h3 { font-size: 1.5em; margin: 16px 0 8px; color: var(--primary); }
+  .subtitle { font-size: 1.4em; color: #adb5bd; margin-bottom: 30px; }
+
+  .content-area { max-width: 900px; width: 100%; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; max-width: 1000px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; width: 100%; max-width: 1100px; }
+
+  .feature-card {
+    background: rgba(255,255,255,0.07); border-radius: 12px; padding: 24px;
+    border-left: 4px solid var(--primary); margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+  }
+  .feature-card h3 { margin-top: 0; }
+  .feature-card ul { padding-left: 20px; }
+  .feature-card li { margin: 6px 0; color: #ced4da; line-height: 1.6; }
+
+  .stat-row { display: flex; gap: 20px; margin: 20px 0; }
+  .stat-box {
+    background: rgba(255,255,255,0.1); border-radius: 12px; padding: 24px;
+    text-align: center; flex: 1; min-width: 120px;
+  }
+  .stat-box .num { font-size: 2.8em; font-weight: 700; display: block; }
+  .stat-box .label { color: #adb5bd; font-size: 0.9em; margin-top: 4px; }
+
+  .arrow-big { font-size: 3em; color: var(--primary); text-align: center; margin: 10px 0; }
+  .flow-row { display: flex; align-items: center; justify-content: center; gap: 20px; }
+
+  table.demo-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  table.demo-table th, table.demo-table td { padding: 10px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  table.demo-table th { background: rgba(255,255,255,0.1); color: var(--primary); font-weight: 600; }
+  table.demo-table td { color: #ced4da; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge.green { background: rgba(25,135,84,0.2); color: #75b798; }
+  .badge.blue { background: rgba(13,110,253,0.2); color: #6ea8fe; }
+  .badge.orange { background: rgba(253,126,20,0.2); color: #fdab4b; }
+
+  code.input { background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 4px; font-family: monospace; color: #74c9ef; }
+  code.url { background: rgba(13,110,253,0.15); padding: 2px 8px; border-radius: 4px; color: #6ea8fe; }
+
+  .nav-hint {
+    position: fixed; bottom: 20px; right: 40px; z-index: 10;
+    background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 8px;
+    font-size: 0.9em; color: #adb5bd; backdrop-filter: blur(10px);
+  }
+  .slide-counter { position: fixed; bottom: 20px; left: 40px; z-index: 10; color: #6c757d; font-size: 0.9em; }
+
+  /* Presentation mode */
+  @media (max-width: 1200px) {
+    .slide { padding: 30px 40px; }
+    h1 { font-size: 2.4em; } h2 { font-size: 1.8em; }
+    .two-col { grid-template-columns: 1fr; } .three-col { grid-template-columns: 1fr; }
+  }
+
+  /* Print styles */
+  @media print {
+    .slide { position: relative; opacity: 1; transform: none !important; height: 100vh; page-break-after: always; }
+    body { background: white; color: black; overflow: visible; }
+    .nav-hint, .slide-counter { display: none; }
+    h2 { border-left-color: var(--primary); color: #1a1a2e; }
+    table.demo-table th, table.demo-table td { border-bottom-color: #dee2e6; color: #212529; }
+    table.demo-table th { background: #f8f9fa; color: var(--primary); }
+  }
+</style>
+</head>
+<body>
+
+<div class="slides">
+
+  <!-- SLIDE 0: Title -->
+  <div class="slide active" data-bg="gradient-dark">
+    <div style="text-align:center;">
+      <div style="font-size:4em; margin-bottom:20px;">💰</div>
+      <h1>ACME Salary Management System</h1>
+      <p class="subtitle">Enterprise-Grade Compensation & Analytics Platform</p>
+      <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
+        <div class="stat-box"><span class="num" style="color:var(--primary);">9</span><span class="label">Core Modules</span></div>
+        <div class="stat-box"><span class="num" style="color:var(--green);">34</span><span class="label">Countries</span></div>
+        <div class="stat-box"><span class="num" style="color:var(--orange);">107</span><span class="num" style="color:var(--orange); font-size:2.8em; display:block;">+4</span><span class="label">Backend + E2E Tests</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 1: Agenda -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Agenda</h2>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:30px;">
+        <div style="padding:16px; background:rgba(13,110,253,0.1); border-radius:8px; border-left:3px solid var(--primary);">
+          <strong>1.</strong> Architecture & Tech Stack<br><span style="color:#adb5bd;font-size:0.9em;">Spring Boot + Angular 17 + MySQL</span>
+        </div>
+        <div style="padding:16px; background:rgba(25,135,84,0.1); border-radius:8px; border-left:3px solid var(--green);">
+          <strong>2.</strong> Authentication & Security<br><span style="color:#adb5bd;font-size:0.9em;">Session-based auth with role guards</span>
+        </div>
+        <div style="padding:16px; background:rgba(253,126,20,0.1); border-radius:8px; border-left:3px solid var(--orange);">
+          <strong>3.</strong> Employee Directory<br><span style="color:#adb5bd;font-size:0.9em;">Advanced search, filters, pagination</span>
+        </div>
+        <div style="padding:16px; background:rgba(111,66,193,0.1); border-radius:8px; border-left:3px solid var(--purple);">
+          <strong>4.</strong> Salary Management<br><span style="color:#adb5bd;font-size:0.9em;">Multi-currency salary tracking</span>
+        </div>
+        <div style="padding:16px; background:rgba(220,53,69,0.1); border-radius:8px; border-left:3px solid var(--red);">
+          <strong>5.</strong> Analytics Dashboard<br><span style="color:#adb5bd;font-size:0.9em;">KPIs, country & department breakdowns</span>
+        </div>
+        <div style="padding:16px; background:rgba(13,110,253,0.1); border-radius:8px; border-left:3px solid var(--primary);">
+          <strong>6.</strong> Reports & Export<br><span style="color:#adb5bd;font-size:0.9em;">HR templates with CSV download</span>
+        </div>
+        <div style="padding:16px; background:rgba(25,135,84,0.1); border-radius:8px; border-left:3px solid var(--green);">
+          <strong>7.</strong> Quality Assurance<br><span style="color:#adb5bd;font-size:0.9em;">107 unit/integration + 4 E2E tests</span>
+        </div>
+        <div style="padding:16px; background:rgba(111,66,193,0.1); border-radius:8px; border-left:3px solid var(--purple);">
+          <strong>8.</strong> Demo Walkthrough<br><span style="color:#adb5bd;font-size:0.9em;">Step-by-step use case scenarios</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Architecture -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>System Architecture</h2>
+      <div style="margin-top:30px;">
+        <div class="feature-card" style="border-left-color:var(--green);">
+          <h3>🖥️ Infrastructure</h3>
+          <ul>
+            <li><strong>Docker Compose:</strong> 3 service containers (MySQL, API, Web)</li>
+            <li><strong>Database:</strong> MySQL 9.7 on port 3310 with utf8mb4 encoding</li>
+            <li><strong>Deployment:</strong> Multi-stage Docker builds for all services</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>⚙️ Backend — Spring Boot 3.2.5</h3>
+          <ul>
+            <li><strong>Java 25</strong> with Hibernate ORM 6.4, Spring Data JPA</li>
+            <li><strong>REST API:</strong> /api/v1/health, /employees, /analytics, /reports</li>
+            <li><strong>Security:</strong> Spring Security with session-based auth</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--purple);">
+          <h3>🎨 Frontend — Angular 17.3</h3>
+          <ul>
+            <li><strong>Stand-alone components:</strong> No NgModule, router-based lazy loading</li>
+            <li><strong>Nginx reverse proxy:</strong> Serves static build, proxies API calls</li>
+            <li><strong>Routing:</strong> /dashboard, /directory, /reports, /salary/:id</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Database Schema -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Database Schema</h2>
+      <table class="demo-table" style="margin-top:20px;">
+        <tr><th style="width:180px;">Table</th><th>Key Columns</th><th>Description</th></tr>
+        <tr><td><strong>employees</strong></td><td>emp_no, first_name, last_name, dept, country</td><td>Core employee profiles with soft-delete support</td></tr>
+        <tr><td><strong>salaries</strong></td><td>employee_id, salary_amount, currency_code, effective_date</td><td>Multi-currency salary history with previous_salary snapshot</td></tr>
+        <tr><td><strong>payroll_records</strong></td><td>period_start, period_end, gross_pay, net_pay</td><td>Pay-period detail with flexible JSON deductions</td></tr>
+        <tr><td><strong>currencies</strong></td><td>code (ISO 4217), name, symbol</td><td>34 supported currencies with native names</td></tr>
+        <tr><td><strong>exchange_rates</strong></td><td>from_code, to_code, rate, effective_date</td><td>Reserved for future FX conversions</td></tr>
+        <tr><td><strong>audit_logs</strong></td><td>employee_id, table_name, field_name, old/new values</td><td>Immutable append-only audit trail</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Authentication -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Authentication & Security</h2>
+      <div class="two-col" style="margin-top:20px;">
+        <div>
+          <div class="feature-card">
+            <h3>Login Flow</h3>
+            <ul>
+              <li>URL: <code class="url">http://localhost:4200/login</code></li>
+              <li>Demo accounts: <code class="input">admin@acme.com / admin123</code></li>
+              <li><strong>HR Manager:</strong> admin@acme.com — full access (edit/delete)</li>
+              <li><strong>HR Analyst:</strong> hranalyst@acme.com — read + edit</li>
+            </ul>
+          </div>
+          <div class="feature-card">
+            <h3>Session Management</h3>
+            <ul>
+              <li>HTTP-only session cookies via Spring HttpSession</li>
+              <li>Angular <code class="input">AuthGuard</code> protects all routes except /login</li>
+              <li>Session-based principal passed to frontend</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="feature-card">
+            <h3>Security Features</h3>
+            <ul>
+              <li><span class="badge green">Role-based access</span> HR_MANAGER vs HR_ANALYST</li>
+              <li><span class="badge blue">CSRF disabled</span> (session-based, not JWT)</li>
+              <li><span class="badge orange">CORS configured</span> localhost:4200 origin</li>
+              <li><span class="badge green">Input validation</span> ValidationService on all writes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Dashboard -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Compensation Dashboard</h2>
+      <p style="color:#adb5bd; margin-bottom:20px;">URL: <code class="url">http://localhost:4200/dashboard</code></p>
+      <div style="margin-top:16px;">
+        <h3>KPI Cards (Top Row)</h3>
+        <div class="stat-row">
+          <div class="stat-box"><span class="num" style="color:#0d6efd;">$X.XM</span><span class="label">Total Annual Payroll</span></div>
+          <div class="stat-box"><span class="num" style="color:#198754;">$XXK</span><span class="label">Average Salary</span></div>
+          <div class="stat-box"><span class="num" style="color:#fd7e14;">$XXK</span><span class="label">Median Salary</span></div>
+          <div class="stat-box"><span class="num" style="color:#6f42c1;">X,XXX</span><span class="label">Total Employees</span></div>
+        </div>
+
+        <h3>Charts (Bottom Row)</h3>
+        <div class="two-col">
+          <div class="feature-card" style="border-left-color:var(--green);">
+            <h3>🌍 Country Breakdown</h3>
+            <ul>
+              <li>Payroll by country with count & averages</li>
+              <li>Currencies auto-formatted per region (USD, EUR, GBP, JPY…)</li>
+              <li>Supports 34 countries including US, UK, DE, JP, FR, IN, CA, AU, SG</li>
+            </ul>
+          </div>
+          <div class="feature-card" style="border-left-color:var(--purple);">
+            <h3>🏢 Department Breakdown</h3>
+            <ul>
+              <li>Payroll distribution across departments</li>
+              <li>Engineering, Sales, Marketing, HR, Finance, Operations, Legal</li>
+              <li>Bar chart with percentage of total payroll</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Analytics -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Analytics & Reporting</h2>
+      <div style="margin-top:16px;">
+        <h3>Analytics API Endpoints</h3>
+        <table class="demo-table">
+          <tr><th>Endpoint</th><th>Returns</th></tr>
+          <tr><td><code class="input">GET /api/v1/analytics/summary</code></td><td>Aggregate KPIs (total, avg, median payroll + employee count)</td></tr>
+          <tr><td><code class="input">GET /api/v1/analytics/by-country</code></td><td>Country-level breakdown with totalPayroll, employeeCount, avgSalary</td></tr>
+          <tr><td><code class="input">GET /api/v1/analytics/by-department</code></td><td>Department payroll distribution data</td></tr>
+          <tr><td><code class="input">GET /api/v1/analytics/by-job-level</code></td><td>Salary distributions by job level (Junior, Mid, Senior, Lead)</td></tr>
+          <tr><td><code class="input">GET /api/v1/analytics/by-currency</code></td><td>All 34 supported currencies with symbols</td></tr>
+        </table>
+
+        <h3>Reports Page Features</h3>
+        <div class="two-col" style="margin-top:12px;">
+          <div class="feature-card">
+            <h3>HR Question Templates</h3>
+            <ul>
+              <li><code class="input">avg-by-country</code> — Average salary by country</li>
+              <li><code class="input">highest-departments</code> — Highest payroll departments</li>
+              <li><code class="input">level-distribution</code> — Salary distribution by job level</li>
+            </ul>
+          </div>
+          <div class="feature-card">
+            <h3>Data Export</h3>
+            <ul>
+              <li>One-click CSV download button</li>
+              <li>Employee data with all columns</li>
+              <li>Salary summary export (currency, amount, date)</li>
+              <li>Payslip details for individual employees</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Employee Directory -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Employee Directory</h2>
+      <p style="color:#adb5bd; margin-bottom:16px;">URL: <code class="url">http://localhost:4200/directory</code></p>
+      <div style="margin-top:12px;">
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>Filter Bar</h3>
+          <ul>
+            <li><strong>Full-text search:</strong> Search by employee name or email (debounced 300ms)</li>
+            <li><strong>Country filter:</strong> All 9 supported countries with dropdown selection</li>
+            <li><strong>Department filter:</strong> Engineering, Sales, Marketing, HR, Finance, Operations, Legal, Other</li>
+            <li><strong>Status filter:</strong> ACTIVE / TERMINATED / All Statuses</li>
+          </ul>
+        </div>
+
+        <h3>Data Table Columns</h3>
+        <table class="demo-table">
+          <tr><th>Column</th><th>Details</th></tr>
+          <tr><td>Employee ID</td><td>EMP-00001 format, clickable to detail page</td></tr>
+          <tr><td>Name</td><td>First + Last name combined</td></tr>
+          <tr><td>Country</td><td>Full country name with region code (e.g., United States (US))</td></tr>
+          <tr><td>Department</td><td>Dept classification</td></tr>
+          <tr><td>Job Title</td><td>Role designation</td></tr>
+          <tr><td>Status</td><td>Color-coded badge: green (ACTIVE) / red (TERMINATED)</td></tr>
+          <tr><td>Salary</td><td>Currency-formatted with symbol ($, €, £, ¥…)</td></tr>
+          <tr><td>Actions</td><td>✏️ Edit + 🗑️ Delete (HR Managers only)</td></tr>
+        </table>
+
+        <div class="feature-card" style="border-left-color:var(--green);">
+          <h3>Pagination & Controls</h25>
+          <ul>
+            <li>Paginated loading (default 25 per page)</li>
+            <li>Page number display with « / » navigation</li>
+            <li>"Showing X of Y employees" indicator</li>
+            <li>+ Add Employee button (HR Managers)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Salary Management -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Salary Management</h2>
+      <p style="color:#adb5bd; margin-bottom:16px;">URL: <code class="url">http://localhost:4200/salary/:id</code></p>
+
+      <div class="two-col" style="margin-top:12px;">
+        <div>
+          <h3>Employee Detail Page</h3>
+          <ul style="color:#ced4da; margin-bottom:16px;">
+            <li>Employee header: name, emp_no, dept, job_title, country</li>
+            <li><strong>Salary History</strong> tab — view all salary changes</li>
+            <li><strong>Payroll Records</strong> tab — gross/net pay per period</li>
+          </ul>
+
+          <h3>Salary Entry Form</h3>
+          <table class="demo-table">
+            <tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+            <tr><td>Salary Amount</td><td>Number (decimal)</td><td>Required, min 0.01, positive only</td></tr>
+            <tr><td>Currency</td><td>Select (34 options)</td><td>USD, EUR, GBP, JPY, INR, CNY…</td></tr>
+            <tr><td>Effective Date</td><td>Date picker</td><td>Required, YYYY-MM-DD format</td></tr>
+            <tr><td>Notes</td><td>Textarea (3 rows)</td><td>Optional justification/reason</td></tr>
+          </table>
+        </div>
+
+        <div class="feature-card" style="border-left-color:var(--orange);">
+          <h3>Salary History Table</h3>
+          <ul>
+            <li>Shows effective date, current amount, previous salary (for comparison)</li>
+            <li>Status badges: CURRENT / SUPERSEDED / PENDING</li>
+            <li>Currency symbol auto-formats the displayed amount</li>
+            <li>Full audit trail captured in audit_logs table</li>
+          </ul>
+
+          <div class="feature-card" style="border-left-color:var(--green); margin-top:12px;">
+            <h3>Payroll Records Table</h3>
+            <ul>
+              <li>Period dates, gross pay, net pay with currency formatting</li>
+              <li>Status badges: PENDING / PROCESSED / ERROR</li>
+              <li>Flexible JSON-based deductions per country requirements</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Use Case Scenarios -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Key Use Case Scenarios</h2>
+      <div style="margin-top:16px;">
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>Scenario 1 — Onboarding a New Employee</h3>
+          <ol style="color:#ced4da; line-height:2;">
+            <li>Login as HR Manager → URL: <code class="url">http://localhost:4200/login</code></li>
+            <li>Navigate to /directory → click "+ Add Employee"</li>
+            <li>Fill in: first name, last name, email, country, department, job title</li>
+            <li>Assign initial salary via the Salary Entry form (amount, currency, effective date)</li>
+            <li>Audit log entry auto-created for compliance tracking</li>
+          </ol>
+        </div>
+
+        <div class="feature-card" style="border-left-color:var(--green);">
+          <h3>Scenario 2 — Annual Salary Review</h3>
+          <ol style="color:#ced4da; line-height:2;">
+            <li>Open Dashboard → review KPIs and department breakdowns</li>
+            <li>Use Analytics page to filter by department & country</li>
+            <li>For each employee: view salary history tab, compare previous vs current</li>
+            <li>Enter new salary amount with effective date (creates history entry)</li>
+            <li>Export CSV report for board review</li>
+          </ol>
+        </div>
+
+        <div class="feature-card" style="border-left-color:var(--orange);">
+          <h3>Scenario 3 — International Payroll Query</h3>
+          <ol style="color:#ced4da; line-height:2;">
+            <li>Dashboard → Country Breakdown chart (payroll by country)</li>
+            <li>Reports → select "Average salary by country" template</li>
+            <li>Data shown with correct currency symbols per region ($, €, £, ¥…)</li>
+            <li>Export to CSV for HR leadership review</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Quality Assurance -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Quality Assurance & Testing</h2>
+      <div style="margin-top:16px;">
+        <div class="two-col">
+          <div class="feature-card" style="border-left-color:var(--green);">
+            <h3>🧪 Backend Tests (Spring Boot)</h3>
+            <table class="demo-table">
+              <tr><th>Test Type</th><th>Count</th></tr>
+              <tr><td>Integration Tests</td><td>36 tests — full Spring context with MySQL DB</td></tr>
+              <tr><td>Service Unit Tests</td><td>41 tests — Salary, Employee, Analytics, Report services</td></tr>
+              <tr><td>Unit Test Suites</td><td>30 tests — focused on service logic</td></tr>
+            </table>
+            <p style="color:var(--green); font-weight:600; margin-top:8px;">Total: 107 tests — all passing ✅</p>
+          </div>
+
+          <div class="feature-card" style="border-left-color:var(--purple);">
+            <h3>🎭 Frontend Tests (E2E)</h3>
+            <table class="demo-table">
+              <tr><th>Test</th><th>Description</th></tr>
+              <tr><td>Login Page Load</td><td>Verifies h1 title and form rendering</td></tr>
+              <tr><td>Login Flow</td><td>Mocks auth API → navigates to dashboard</td></tr>
+              <tr><td>Analytics Dashboard</td><td>Mocks analytics API → verifies content rendering</td></tr>
+              <tr><td>Employee Directory</td><td>Mock employees API → verifies table display</td></tr>
+            </table>
+            <p style="color:var(--green); font-weight:600; margin-top:8px;">Total: 4 E2E tests — all passing ✅</p>
+          </div>
+        </div>
+
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>🐳 Deployment Pipeline</h3>
+          <ul>
+            <li>Docker multi-stage builds → optimized image sizes (maven/node → eclipse-temurin)</li>
+            <li>Health checks on all 3 services (MySQL via mysqladmin, API via /api/v1/health, Web via nginx)</li>
+            <li><code class="input">docker compose up</code> starts full stack with dependency ordering</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Tech Stack -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Technology Stack</h2>
+      <div class="three-col" style="margin-top:30px;">
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>Backend</h3>
+          <ul>
+            <li><strong>Java 25</strong> (JRE Alpine)</li>
+            <li><strong>Spring Boot 3.2.5</strong></li>
+            <li><strong>Hibernate ORM 6.4</strong></li>
+            <li><strong>Spring Data JPA</strong></li>
+            <li><strong>Spring Security</strong></li>
+            <li><strong>MySQL Connector 8.3</strong></li>
+            <li><strong>Maven 3.9</strong></li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--purple);">
+          <h3>Frontend</h3>
+          <ul>
+            <li><strong>Angular 17.3</strong></li>
+            <li><strong>TypeScript</strong></li>
+            <li><strong>RxJS</strong> (observable patterns)</li>
+            <li><strong>Standalone Components</strong></li>
+            <li><strong>Angular Router</strong></li>
+            <li><strong>HTTP Client + Interceptors</strong></li>
+            <li><strong>Karma + Jasmine + Playwright</strong></li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--green);">
+          <h3>Infrastructure</h3>
+          <ul>
+            <li><strong>Docker Compose</strong> (v3.9)</li>
+            <li><strong>MySQL 9.7</strong></li>
+            <li><strong>Nginx 1.25</strong> (static + proxy)</li>
+            <li><strong>Node 20 Alpine</strong></li>
+            <li><strong>eclipse-temurin 25 JRE</strong></li>
+            <li><strong>Maven go-offline</strong></li>
+            <li><strong>healthcheck</strong> scripts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Demo Script -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>Demo Walkthrough (Screen Recording Guide)</h2>
+      <p style="color:#adb5bd; margin-bottom:16px;">Follow these steps to record a professional demo video. Each step shows exactly what to type and what to expect.</p>
+
+      <div class="three-col">
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>Step 1: Login</h3>
+          <ul>
+            <li>Navigate to <code class="url">localhost:4200</code></li>
+            <li>Email: <code class="input">admin@acme.com</code></li>
+            <li>Password: <code class="input">admin123</code></li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--green);">
+          <h3>Step 2: Dashboard</h3>
+          <ul>
+            <li>Navigate to <code class="url">localhost:4200/dashboard</code></li>
+            <li>Show KPI cards (payroll, avg salary, median, employees)</li>
+            <li>Scroll to show country/department charts</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--orange);">
+          <h3>Step 3: Directory</h3>
+          <ul>
+            <li>Navigate to <code class="url">localhost:4200/directory</code></li>
+            <li>Type in search box (e.g., "John Smith")</li>
+            <li>Use country/department/status filters</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--purple);">
+          <h3>Step 4: Salary Detail</h3>
+          <ul>
+            <li>Click an employee row in directory</li>
+            <li>Navigate to <code class="url">localhost:4200/salary/1</code></li>
+            <li>Show Salary History & Payroll tabs</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--red);">
+          <h3>Step 5: Add Salary</h3>
+          <ul>
+            <li>Click "New Salary Entry" on detail page</li>
+            <li>Enter amount, select currency (e.g., USD $100,000)</li>
+            <li>Pick effective date, add notes, click Save</li>
+          </ul>
+        </div>
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>Step 6: Reports & Export</h3>
+          <ul>
+            <li>Navigate to <code class="url">localhost:4200/reports/custom</code></li>
+            <li>Select "Average salary by country"</li>
+            <li>Click "Download CSV Export"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: API Reference -->
+  <div class="slide">
+    <div class="content-area">
+      <h2>API Reference</h2>
+      <div style="margin-top:16px;">
+        <div class="feature-card" style="border-left-color:var(--primary);">
+          <h3>Authentication</h3>
+          <table class="demo-table">
+            <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+            <tr><td><span class="badge green" style="background:rgba(25,135,84,0.3);">POST</span></td><td>/api/v1/auth/login</td><td>Login with email + password, returns session token</td></tr>
+            <tr><td><span class="badge green" style="background:rgba(25,135,84,0.3);">POST</span></td><td>/api/v1/auth/logout</td><td>Invalidate session</td></tr>
+            <tr><td><span class="badge blue" style="background:rgba(13,110,253,0.3);">GET</span></td><td>/api/v1/auth/me</td><td>Get current user info (id, name, role)</td></tr>
+          </table>
+        </div>
+
+        <div class="feature-card" style="border-left-color:var(--green);">
+          <h3>Employees & Salaries</h3>
+          <table class="demo-table">
+            <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+            <tr><td><span class="badge blue" style="background:rgba(13,110,253,0.3);">GET</span></td><td>/api/v1/employees?page=&size=&search=&country=&dept=&status=</td><td>Paginated list with filters</td></tr>
+            <tr><td><span class="badge blue" style="background:rgba(13,110,253,0.3);">GET</span></td><td>/api/v1/employees/{id}</td><td>Single employee detail</td></tr>
+            <tr><td><span class="badge green" style="background:rgba(25,135,84,0.3);">POST</span></td><td>/api/v1/employees</td><td>Create new employee</td></tr>
+            <tr><td><span class="badge orange" style="background:rgba(253,126,20,0.3);">PUT</span></td><td>/api/v1/employees/{id}</td><td>Update employee</td></tr>
+            <tr><td><span class="badge green" style="background:rgba(25,135,84,0.3);">POST</span></td><td>/api/v1/salaries</td><td>Create salary entry</td></tr>
+            <tr><td><span class="badge orange" style="background:rgba(253,126,20,0.3);">PATCH</span></td><td>/api/v1/employees/{id}/status?status=ACTIVE|TERMINATED</td><td>Toggle employment status</td></tr>
+          </table>
+        </div>
+
+        <div class="feature-card" style="border-left-color:var(--purple);">
+          <h3>Analytics & Reports</h3>
+          <table class="demo-table">
+            <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+            <tr><td><span class="badge blue" style="background:rgba(13,110,253,0.3);">GET</span></td><td>/api/v1/health</td><td>Health check (database connection status)</td></tr>
+            <tr><td><span class="badge blue" style="background:rgba(13,110,253,0.3);">GET</span></td><td>/api/v1/analytics/summary</td><td>Aggregate KPI data</td></tr>
+            <tr><td><span class="badge blue" style="background:rgba(13,110,253,0.3);">GET</span></td><td>/api/v1/analytics/by-department</td><td>Department payroll breakdown</td></tr>
+            <tr><td><span class="badge green" style="background:rgba(25,135,84,0.3);">POST</span></td><td>/api/v1/reports/employees/csv</td><td>Export employee data as CSV</td></tr>
+            <tr><td><span class="badge green" style="background:rgba(25,135,84,0.3);">POST</span></td><td>/api/v1/reports/salary-summary/csv</td><td>Export salary summary as CSV</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: Summary -->
+  <div class="slide">
+    <div style="text-align:center;">
+      <h1>ACME Salary Management</h1>
+      <p class="subtitle">A Complete Enterprise Compensation Platform</p>
+
+      <div class="stat-row" style="max-width:900px; margin:30px auto;">
+        <div class="stat-box"><span class="num" style="color:var(--primary);">6</span><span class="label">Core Modules</span></div>
+        <div class="stat-box"><span class="num" style="color:var(--green);">107</span><span class="label">Tests Passed</span></div>
+        <div class="stat-box"><span class="num" style="color:var(--orange);">4</span><span class="num" style="color:var(--orange); font-size:2.8em; display:block;">E2E</span><span class="label">End-to-End Tests</span></div>
+        <div class="stat-box"><span class="num" style="color:var(--purple);">34</span><span class="label">Currencies</span></div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <h3 style="color:#adb5bd; font-weight:normal; font-size:1.1em;">Built with Spring Boot 3.2 · Angular 17 · MySQL 9.7 · Docker Compose</h3>
+      </div>
+
+      <div class="arrow-big" style="margin-top:40px;">→</div>
+
+      <div style="margin-top:10px; font-size:1.3em;">
+        <span class="badge green">Dashboard</span>
+        <span class="badge blue">Directory</span>
+        <span class="badge orange">Salary Mgmt</span>
+        <span class="badge green">Analytics</span>
+        <span class="badge blue">Reports</span>
+      </div>
+
+      <p style="color:#6c757d; margin-top:30px; font-size:0.9em;">All services deployed and verified via Docker Compose with automated health checks.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="slide-counter" id="counter">1 / 14</div>
+<div class="nav-hint">← → or click to navigate &nbsp;|&nbsp; Press <kbd style="background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:3px;">F</kbd> for full-screen</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+const total = slides.length;
+
+function show(idx) {
+  slides[current].classList.remove('active');
+  current = ((idx % total) + total) % total;
+  slides[current].classList.add('active');
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') show(current + 1);
+  if (e.key === 'ArrowLeft') show(current - 1);
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+// Touch/swipe support for tablets
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 50) show(current + (diff < 0 ? 1 : -1));
+});
+
+// Click to advance (right half of screen) or go back (left half)
+document.addEventListener('click', e => {
+  if (e.target.closest('.nav-hint') || e.target.closest('.slide-counter')) return;
+  if (e.clientX > window.innerWidth / 2) show(current + 1);
+  else show(current - 1);
+});
+
+// Keyboard shortcut for demo script
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') show(0); // go to first slide
+});
+</script>
+</body>
+</html>
