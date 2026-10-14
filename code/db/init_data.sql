@@ -7,7 +7,7 @@
 -- =============================================================================
 
 -- ----- CURRENCIES (34 countries/regions represented) -----
-INSERT INTO currencies (code, name, symbol, native_name, is_active) VALUES
+INSERT IGNORE INTO currencies (code, name, symbol, native_name, is_active) VALUES
 ('USD', 'US Dollar', '$', 'US Dollar', TRUE),
 ('EUR', 'Euro', '€', 'Euro', TRUE),
 ('GBP', 'British Pound', '£', 'Pound Sterling', TRUE),
@@ -44,7 +44,7 @@ INSERT INTO currencies (code, name, symbol, native_name, is_active) VALUES
 ('DKK', 'Danish Krone', 'kr', 'Dansk krone', TRUE);
 
 -- ----- SAMPLE EXCHANGE RATES (base USD) -----
-INSERT INTO exchange_rates (from_code, to_code, rate, effective_date, source) VALUES
+INSERT IGNORE INTO exchange_rates (from_code, to_code, rate, effective_date, source) VALUES
 ('EUR', 'USD', 1.0850, '2026-01-01', 'ECB'),
 ('GBP', 'USD', 1.2700, '2026-01-01', 'ECB'),
 ('JPY', 'USD', 0.0067, '2026-01-01', 'ECB'),
@@ -56,14 +56,13 @@ INSERT INTO exchange_rates (from_code, to_code, rate, effective_date, source) VA
 ('CAD', 'USD', 0.7400, '2026-01-01', 'ECB'),
 ('AUD', 'USD', 0.6500, '2026-01-01', 'ECB');
 
--- ----- ONE ADMIN / DEMO USER (password hash would be set at runtime) -----
-INSERT INTO employees (id, emp_no, first_name, last_name, email, phone,
+-- System Administrator account (id=1) is required as parent for seed data's created_by/updated_by.
+SET FOREIGN_KEY_CHECKS = 0;
+INSERT IGNORE INTO employees (id, emp_no, first_name, last_name, email, phone,
     address_line1, city, state_province, zip_code, country, dept, job_title,
     employment_status, start_date, is_active, created_by, updated_by)
 VALUES
 (1, 'EMP-00000', 'System', 'Admin', 'admin@acme.com', '+1-555-000-0000',
     '127.0.0.1', 'Demo City', NULL, '00000', 'United States (US)', 'IT', 'System Administrator',
-    'ACTIVE', CURDATE(), TRUE, 1, 1),
-(2, 'EMP-00001', 'HR', 'Analyst', 'hranalyst@acme.com', '+1-555-000-0001',
-    '127.0.0.1', 'Demo City', NULL, '00001', 'United States (US)', 'HR', 'HR Analyst',
     'ACTIVE', CURDATE(), TRUE, 1, 1);
+SET FOREIGN_KEY_CHECKS = 1;

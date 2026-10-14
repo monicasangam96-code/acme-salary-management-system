@@ -22,7 +22,7 @@ public class TestDbEnvironmentPostProcessor implements EnvironmentPostProcessor 
 
         String dbName = dbUrl.replaceAll("jdbc:mysql://[^/]+/", "").split("[?&]")[0];
         try (Connection c = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/?useSSL=false&allowPublicKeyRetrieval=true",
+                "jdbc:mysql://localhost:3310/?useSSL=false&allowPublicKeyRetrieval=true",
                 "root", "root99*");
              Statement s = c.createStatement()) {
             s.execute("CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");

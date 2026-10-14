@@ -4,10 +4,11 @@
 -- full 10,000-row dataset. This file provides demo data for verification.
 -- =============================================================================
 
-LOCK TABLES employees WRITE;
-UNLOCK TABLES;
+-- Fresh volume: all tables are empty. Use IGNORE for safety on redeployments.
+-- FK checks disabled to allow self-referential parent records (created_by=1).
+SET FOREIGN_KEY_CHECKS = 0;
 
-INSERT INTO employees (id, emp_no, first_name, last_name, email, phone,
+INSERT IGNORE INTO employees (id, emp_no, first_name, last_name, email, phone,
     address_line1, city, state_province, zip_code, country, dept, job_title,
     employment_status, start_date, is_active, created_by, updated_by)
 VALUES
