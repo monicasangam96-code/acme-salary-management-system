@@ -12,6 +12,7 @@ services:
       - ../../code/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ../../code/db/init_data.sql:/docker-entrypoint-initdb.d/02-init.sql:ro
       - ../../code/db/seed_sample.sql:/docker-entrypoint-initdb.d/03-seed.sql:ro
+      - ../../code/db/seed_salaries.sql:/docker-entrypoint-initdb.d/04-salaries.sql:ro
     command: >
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
