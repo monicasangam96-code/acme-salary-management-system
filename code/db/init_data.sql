@@ -63,4 +63,7 @@ INSERT INTO employees (id, emp_no, first_name, last_name, email, phone,
 VALUES
 (1, 'EMP-00000', 'System', 'Admin', 'admin@acme.com', '+1-555-000-0000',
     '127.0.0.1', 'Demo City', NULL, '00000', 'United States (US)', 'IT', 'System Administrator',
+    'ACTIVE', CURDATE(), TRUE, 1, 1),
+(2, 'EMP-00001', 'HR', 'Analyst', 'hranalyst@acme.com', '+1-555-000-0001',
+    '127.0.0.1', 'Demo City', NULL, '00001', 'United States (US)', 'HR', 'HR Analyst',
     'ACTIVE', CURDATE(), TRUE, 1, 1);

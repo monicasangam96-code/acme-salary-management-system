@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 // Use relative path to go through Nginx on port 4200 — ensures cookies work
 // across all requests (localhost:4200 ↔ localhost:8080 share the same origin)
@@ -17,6 +18,7 @@ export interface AuthResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUser$: BehaviorSubject<AuthResponse | null> = new BehaviorSubject<AuthResponse | null>(null);
+  private router = inject(Router);
 
   constructor(private http: HttpClient) {
     this.checkSession();
@@ -41,9 +43,21 @@ export class AuthService {
   checkSession(): void {
     this.http.get<{ id: number; name: string; role: string }>(`${API_PATH}/auth/me`)
       .subscribe({
-        next: res => this.currentUser$.next({ sessionToken: '', userId: res.id, userName: res.name, role: res.role as 'HR_MANAGER' | 'HR_ANALYST' }),
+        next: res => {
+          const authRes: AuthResponse = {
+            sessionToken: '',
+            userId: res.id,
+            userName: res.name,
+            role: res.role as 'HR_MANAGER' | 'HR_ANALYST'
+          };
+          this.currentUser$.next(authRes);
+        },
         error: () => this.currentUser$.next(null)
       });
+  }
+
+  getReturnUrl(): string | null {
+    return new URLSearchParams(window.location.search).get('returnUrl');
   }
 
   isAuthenticated(): boolean {
