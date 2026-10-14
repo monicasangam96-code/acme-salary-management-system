@@ -26,6 +26,7 @@ module.exports = function (config) {
     browserDisconnectTimeout: 60000,
     browserNoActivityTimeout: 120000,
     processKillTimeout: 60000,
+    singleRun: true,
     restartOnFileChange: false,
     customLaunchers: {
       ChromeHeadless_NoSandbox: {
