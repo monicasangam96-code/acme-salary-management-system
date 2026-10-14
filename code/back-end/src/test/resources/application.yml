@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3310/salary_mgmt_test?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root99*
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    show-sql: false
+
+server:
+  port: 8081
+
+logging:
+  level:
+    com.acme.salarymgmt: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: OFF
+    com.zaxxer.hikari: WARN

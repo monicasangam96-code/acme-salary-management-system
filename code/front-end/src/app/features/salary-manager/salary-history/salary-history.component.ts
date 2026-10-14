@@ -1,30 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EmployeeService } from '../../core/services/employee.service';
+import { EmployeeService } from '../../../core/services/employee.service';
 
 @Component({
+  standalone: true,
   selector: 'app-salary-history',
-  template: `
-    <div class="salary-history">
-      <h3>Salary History</h3>
-      <table class="data-table">
-        <thead><tr><th>Effective Date</th><th>Amount</th><th>Currency</th><th>Status</th><th>Previous</th></tr></thead>
-        <tbody>
-          @for (salary of salaries; track salary.id) {
-            <tr>
-              <td>{{ salary.effectiveDate }}</td>
-              <td>{{ getCurrencySymbol(salary.currencyCode) }}{{ salary.salaryAmount | number:'1.2-2' }}</td>
-              <td>{{ salary.currencyCode }}</td>
-              <td><span class="badge" [class.current]="salary.status === 'CURRENT'">{{ salary.status }}</span></td>
-              <td>{{ salary.previousSalaryAmount ? getCurrencySymbol(salary.currencyCode) + salary.previousSalaryAmount | number:'1.2-2' : '-' }}</td>
-            </tr>
-          } @empty {
-            <tr><td colspan="5" class="empty">No salary history</td></tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  `,
+  templateUrl: './salary-history.component.html',
+  imports: [CommonModule],
   styles: [`
     :host { display: block; margin-top: 16px; }
     h3 { font-size: 16px; margin-bottom: 8px; color: #495057; }
@@ -43,7 +25,7 @@ export class SalaryHistoryComponent implements OnInit {
   constructor(private employeeService: EmployeeService) {}
 
   ngOnInit(): void {
-    this.employeeService.getSalaryHistory(this.employeeId).subscribe(s => this.salaries = s);
+    this.employeeService.getSalaryHistory(this.employeeId).subscribe((s: any) => this.salaries = s);
   }
 
   getCurrencySymbol(code: string): string {

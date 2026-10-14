@@ -1,26 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AnalyticsService, DepartmentBreakdown } from '../../core/services/analytics.service';
+import { CommonModule } from '@angular/common';
+import { AnalyticsService, DepartmentBreakdown } from "../../../core/services/analytics.service";
 
 @Component({
+  standalone: true,
   selector: 'app-department-breakdown',
-  template: `
-    <div class="chart-card">
-      <h3>Payroll by Department</h3>
-      <div class="bar-chart">
-        @for (item of data; track item.department) {
-          <div class="bar-row">
-            <span class="bar-label">{{ item.department }}</span>
-            <div class="bar-fill" [style.width.%]="getBarPercent(item.totalPayroll)"
-                 style="background: linear-gradient(90deg, #198754, #3dd682);">
-              <span class="bar-value">${{ (item.totalPayroll / 1000).toFixed(0) }}K</span>
-            </div>
-          </div>
-        } @empty {
-          <p class="empty">Loading...</p>
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: './department-breakdown.component.html',
+  imports: [CommonModule],
   styles: [`
     :host { display: block; }
     .chart-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }

@@ -1,13 +1,11 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-kpi-card',
-  template: `
-    <div class="kpi-card" [style.border-left-color]="color">
-      <div class="kpi-title">{{ title }}</div>
-      <div class="kpi-value">{{ value | number:'1.2-2' }}</div>
-    </div>
-  `,
+  templateUrl: './kpi-card.component.html',
+  imports: [CommonModule],
   styles: [`
     :host { display: block; }
     .kpi-card {

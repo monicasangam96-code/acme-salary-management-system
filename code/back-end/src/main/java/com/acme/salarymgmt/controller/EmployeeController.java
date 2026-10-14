@@ -97,8 +97,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}/salary-history")
-    public ResponseEntity<List<SalarySummaryResponse>> salaryHistory(@PathVariable Long employeeId) {
-        var history = employeeService.getSalaryHistory(employeeId);
+    public ResponseEntity<List<com.acme.salarymgmt.service.SalaryService.SalarySummaryResponse>> salaryHistory(
+            @PathVariable Long employeeId, com.acme.salarymgmt.service.SalaryService salaryService) {
+        var history = salaryService.getSalaryHistory(employeeId);
         return ResponseEntity.ok(history);
     }
 

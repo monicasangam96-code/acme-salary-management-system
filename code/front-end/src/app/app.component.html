@@ -1,0 +1,26 @@
+<div class="app-layout">
+  <!-- Top Nav -->
+  <header class="top-nav">
+    <div class="nav-brand">ACME Salary Management</div>
+    <div class="nav-right">
+      @if (authService.currentUser | async; as user) {
+        <span class="user-badge">{{ user.userName }}</span>
+      }
+    </div>
+  </header>
+
+  <!-- Side Rail -->
+  <nav class="side-rail">
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/directory" routerLinkActive="active">Directory</a>
+    <a routerLink="/reports" routerLinkActive="active">Reports</a>
+    @if (authService.currentUser | async) {
+      <a (click)="onLogout()" class="logout-link">Sign Out</a>
+    }
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,13 +1,13 @@
 package com.acme.salarymgmt.service;
 
-import com.acme.salarymgmt.dto.EmployeeSummaryResponse;
+import com.acme.salarymgmt.model.Employee;
 import com.acme.salarymgmt.repository.EmployeeRepository;
-import com.acme.salarymgmt.repository.SalaryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,11 +15,9 @@ import java.util.List;
 public class ReportService {
 
     private final EmployeeRepository employeeRepository;
-    private final SalaryRepository salaryRepository;
 
-    public ReportService(EmployeeRepository employeeRepository, SalaryRepository salaryRepository) {
+    public ReportService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
-        this.salaryRepository = salaryRepository;
     }
 
     @Transactional(readOnly = true)
@@ -31,6 +29,16 @@ public class ReportService {
         // Header row
         csv.append("emp_no,first_name,last_name,email,phone,address_line1,city,state_province,zip_code,country,dept,job_title,employment_status,start_date,end_date,current_salary,currency,effective_date\n");
 
+        // Resolve status to enum or null
+        Employee.EmploymentStatus empStatus = null;
+        if (status != null && !status.isBlank()) {
+            try {
+                empStatus = Employee.EmploymentStatus.valueOf(status);
+            } catch (IllegalArgumentException e) {
+                // ignore invalid status filter
+            }
+        }
+
         // Fetch all employees (paginate in batches for large datasets)
         int page = 0;
         int pageSize = 500;
@@ -38,30 +46,30 @@ public class ReportService {
 
         while (hasMore) {
             var pageable = org.springframework.data.domain.PageRequest.of(page, pageSize);
-            var results = employeeRepository.searchWithFilters(country, dept, status != null ? status : null, search, pageable);
-            if (!results.hasContent()) break;
+            java.util.List<Employee> employees = employeeRepository.searchWithFilters(country, dept, empStatus, search, pageable).getContent();
+            if (employees.isEmpty()) break;
 
-            for (var empSummary : results.getContent()) {
-                csv.append(empSummary.getEmpNo()).append(",")
-                   .append(escape(empSummary.getFirstName())).append(",")
-                   .append(escape(empSummary.getLastName())).append(",")
-                   .append(escape(empSummary.getEmail())).append(",")
-                   .append(escape(empSummary.getPhone() != null ? empSummary.getPhone() : "")).append(",")
-                   .append(escape(empSummary.getAddressLine1().replaceAll(",", ";"))).append(",")
-                   .append(escape(empSummary.getCity())).append(",")
-                   .append(escape(empSummary.getStateProvince() != null ? empSummary.getStateProvince() : "")).append(",")
-                   .append(escape(empSummary.getZipCode())).append(",")
-                   .append(escape(empSummary.getCountry())).append(",")
-                   .append(escape(empSummary.getDept())).append(",")
-                   .append(escape(empSummary.getJobTitle())).append(",")
-                   .append(escape(empSummary.getEmploymentStatus())).append(",")
+            for (Employee emp : employees) {
+                csv.append(escape(emp.getEmpNo())).append(",")
+                   .append(escape(emp.getFirstName())).append(",")
+                   .append(escape(emp.getLastName())).append(",")
+                   .append(escape(emp.getEmail())).append(",")
+                   .append(escape(emp.getPhone() != null ? emp.getPhone() : "")).append(",")
+                   .append(escape(emp.getAddressLine1().replace(",", ";"))).append(",")
+                   .append(escape(emp.getCity())).append(",")
+                   .append(escape(emp.getStateProvince() != null ? emp.getStateProvince() : "")).append(",")
+                   .append(escape(emp.getZipCode())).append(",")
+                   .append(escape(emp.getCountry())).append(",")
+                   .append(escape(emp.getDept())).append(",")
+                   .append(escape(emp.getJobTitle())).append(",")
+                   .append(escape(emp.getEmploymentStatus().toString())).append(",")
                    .append(now).append(",")
-                   .append(empSummary.getCurrentSalaryAmount() != null ? empSummary.getCurrentSalaryAmount().toString() : "")
-                   .append(",").append(empSummary.getCurrentCurrencyCode() != null ? empSummary.getCurrentCurrencyCode() : "USD")
+                   .append("").append(",")
+                   .append("USD")
                    .append("\n");
             }
 
-            if (results.getTotalPages() <= page + 1) hasMore = false;
+            if (employees.size() < pageSize) hasMore = false;
             page++;
         }
 

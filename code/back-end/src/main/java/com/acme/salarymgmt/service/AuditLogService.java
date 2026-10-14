@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class AuditLogService {
+public class AuditLogService implements Auditor {
 
     private final AuditLogRepository auditLogRepository;
     private final Long defaultUserId = 1L; // System Admin

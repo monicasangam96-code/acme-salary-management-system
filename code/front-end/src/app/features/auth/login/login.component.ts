@@ -1,30 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../core/auth/auth.service';
-import { NotificationService } from '../../core/services/notification.service';
+import { AuthService } from '../../../core/auth/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
+  standalone: true,
   selector: 'app-login',
-  template: `
-    <div class="login-container">
-      <div class="login-card">
-        <h1>ACME Salary Management</h1>
-        <p class="subtitle">Sign in to your account</p>
-        <form (ngSubmit)="onLogin()">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" type="email" [(ngModel)]="email" name="email" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input id="password" type="password" [(ngModel)]="password" name="password" required>
-          </div>
-          @if (error) { <p class="error">{{ error }}</p> }
-          <button type="submit" [disabled]="!email || !password" class="btn-login">Sign In</button>
-        </form>
-      </div>
-    </div>
-  `,
+  templateUrl: './login.component.html',
+  imports: [FormsModule],
   styles: [`
     :host { display: block; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: #f8f9fa; }
     .login-card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 360px; }

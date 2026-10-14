@@ -21,8 +21,7 @@ public class PayrollRecord {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(
-            name = "fk_payroll_employee", onDelete = DeleteAction.CASCADE))
+    @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(name = "fk_payroll_employee"))
     private Employee employee;
 
     @Column(name = "employee_id", insertable = false, updatable = false)

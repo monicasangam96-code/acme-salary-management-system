@@ -1,41 +1,12 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NotificationService } from '../../core/services/notification.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
+  standalone: true,
   selector: 'app-salary-entry-form',
-  template: `
-    <div class="salary-form">
-      <h3>New Salary Entry</h3>
-      <form (ngSubmit)="onSave()" #formDir="ngForm" [class.invalid]="!formDir.valid && submitted">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="amount">Salary Amount *</label>
-            <input id="amount" type="number" step="0.01" min="0.01" [(ngModel)]="salaryAmount" name="amount" required>
-            @if (submitted && !salaryAmount) { <span class="error-text">Required</span> }
-          </div>
-          <div class="form-group">
-            <label for="currency">Currency *</label>
-            <select id="currency" [(ngModel)]="currencyCode" name="currency" required>
-              @for (c of currencies; track c.code) { <option [value]="c.code">{{ c.code }} ({{ c.symbol }})</option> }
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="effectiveDate">Effective Date *</label>
-            <input id="effectiveDate" type="date" [(ngModel)]="effectiveDate" name="effectiveDate" required>
-            @if (submitted && !effectiveDate) { <span class="error-text">Required</span> }
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="notes">Notes</label>
-          <textarea id="notes" [(ngModel)]="notes" name="notes" rows="3"></textarea>
-        </div>
-        <button type="submit" [disabled]="!formDir.valid" class="btn-save">Save Salary</button>
-      </form>
-    </div>
-  `,
+  templateUrl: './salary-entry-form.component.html',
+  imports: [FormsModule],
   styles: [`
     :host { display: block; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 16px; }
     h3 { font-size: 16px; margin-bottom: 12px; color: #495057; }

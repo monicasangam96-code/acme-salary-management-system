@@ -1,5 +1,6 @@
 package com.acme.salarymgmt.service;
 
+import com.acme.salarymgmt.dto.CreateEmployeeRequest;
 import com.acme.salarymgmt.dto.EmployeeDetailResponse;
 import com.acme.salarymgmt.dto.EmployeeSummaryResponse;
 import com.acme.salarymgmt.model.*;
@@ -9,22 +10,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final SalaryRepository salaryRepository;
-    private final ValidationService validationService;
-    private final AuditLogService auditLogService;
+    private final Validator validator;
+    private final Auditor auditor;
 
     public EmployeeService(EmployeeRepository employeeRepository,
                            SalaryRepository salaryRepository,
-                           ValidationService validationService,
-                           AuditLogService auditLogService) {
+                           Validator validator,
+                           Auditor auditor) {
         this.employeeRepository = employeeRepository;
         this.salaryRepository = salaryRepository;
-        this.validationService = validationService;
-        this.auditLogService = auditLogService;
+        this.validator = validator;
+        this.auditor = auditor;
     }
 
     @Transactional(readOnly = true)
@@ -60,10 +63,10 @@ public class EmployeeService {
 
     @Transactional
     public EmployeeSummaryResponse create(CreateEmployeeRequest request) {
-        validationService.validateRequired(request.getEmpNo(), "emp_no");
-        validationService.validateRequired(request.getEmail(), "email");
-        validationService.validateEmail(request.getEmail());
-        validationService.validateDates(request.getStartDate(), request.getEndDate());
+        validator.validateRequired(request.getEmpNo(), "emp_no");
+        validator.validateRequired(request.getEmail(), "email");
+        validator.validateEmail(request.getEmail());
+        validator.validateDates(request.getStartDate(), request.getEndDate());
 
         if (employeeRepository.existsByEmpNo(request.getEmpNo())) {
             throw new com.acme.salarymgmt.exception.ValidationException(
@@ -91,7 +94,7 @@ public class EmployeeService {
 
         emp = employeeRepository.save(emp);
 
-        auditLogService.logInsert(
+        auditor.logInsert(
                 emp.getId(), "employees", emp.getId(), "all_fields",
                 "NEW: " + emp.getEmpNo(), 1L);
 
@@ -130,10 +133,10 @@ public class EmployeeService {
 
         // Log field changes
         if (!java.util.Objects.equals(oldDept, request.getDept())) {
-            auditLogService.logUpdate(emp.getId(), "employees", id, "dept", oldDept, request.getDept(), 1L);
+            auditor.logUpdate(emp.getId(), "employees", id, "dept", oldDept, request.getDept(), 1L);
         }
         if (!java.util.Objects.equals(oldStatus, request.getEmploymentStatus())) {
-            auditLogService.logUpdate(emp.getId(), "employees", id, "status", oldStatus, request.getEmploymentStatus(), 1L);
+            auditor.logUpdate(emp.getId(), "employees", id, "status", oldStatus, request.getEmploymentStatus(), 1L);
         }
 
         var response = new EmployeeDetailResponse();
@@ -152,7 +155,7 @@ public class EmployeeService {
             emp.setEndDate(java.time.LocalDate.now());
         }
         employeeRepository.save(emp);
-        auditLogService.logUpdate(emp.getId(), "employees", id, "status", old.toString(), newStatus, 1L);
+        auditor.logUpdate(emp.getId(), "employees", id, "status", old.toString(), newStatus, 1L);
     }
 
     @Transactional
@@ -165,9 +168,10 @@ public class EmployeeService {
             emp.setEmploymentStatus(Employee.EmploymentStatus.TERMINATED);
         }
         employeeRepository.save(emp);
-        auditLogService.logDelete(emp.getId(), "employees", id, 1L);
+        auditor.logDelete(emp.getId(), "employees", id, 1L);
     }
 
+    @Transactional(readOnly = true)
     public java.util.List<Salary> getSalaryHistory(Long employeeId) {
         return salaryRepository.findByEmployeeIdOrderByEffectiveDateDesc(employeeId);
     }
@@ -191,9 +195,8 @@ public class EmployeeService {
         resp.setEndDate(emp.getEndDate());
         resp.setActive(emp.getActive());
         resp.setCreatedAt(emp.getCreatedAt());
-        resp.setCreatedBy(emp.getCreatedBy());
+        resp.setCreatedBy(Long.valueOf(emp.getUpdatedBy() != null ? emp.getUpdatedBy().toString() : "1"));
         resp.setUpdatedAt(emp.getUpdatedAt());
-
         // Current salary
         var current = salaryRepository.findCurrentByEmployeeId(emp.getId());
         if (current.isPresent()) {
@@ -201,23 +204,5 @@ public class EmployeeService {
             resp.setCurrentCurrencyCode(current.get().getCurrencyCode());
             resp.setEffectiveDate(current.get().getEffectiveDate());
         }
-    }
-
-    public interface CreateEmployeeRequest {
-        String getEmpNo();
-        String getFirstName();
-        String getLastName();
-        String getEmail();
-        String getPhone();
-        String getAddressLine1();
-        String getCity();
-        String getStateProvince();
-        String getZipCode();
-        String getCountry();
-        String getDept();
-        String getJobTitle();
-        String getEmploymentStatus();
-        java.time.LocalDate getStartDate();
-        java.time.LocalDate getEndDate();
     }
 }

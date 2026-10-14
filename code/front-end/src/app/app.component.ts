@@ -1,37 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from './core/auth/auth.service';
 
 @Component({
+  standalone: true,
   selector: 'app-root',
-  template: `
-    <div class="app-layout">
-      <!-- Top Nav -->
-      <header class="top-nav">
-        <div class="nav-brand">ACME Salary Management</div>
-        <div class="nav-right">
-          @if (authService.currentUser | async) {
-            <span class="user-badge">{{ authService.currentUser | async | json }}</span>
-          }
-        </div>
-      </header>
-
-      <!-- Side Rail -->
-      <nav class="side-rail">
-        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-        <a routerLink="/directory" routerLinkActive="active">Directory</a>
-        <a routerLink="/reports" routerLinkActive="active">Reports</a>
-        @if (authService.currentUser | async) {
-          <a (click)="onLogout()" class="logout-link">Sign Out</a>
-        }
-      </nav>
-
-      <!-- Main Content -->
-      <main class="main-content">
-        <router-outlet></router-outlet>
-      </main>
-    </div>
-  `,
+  templateUrl: './app.component.html',
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   styles: [`
     :host { display: block; height: 100vh; }
     .app-layout { display: flex; flex-direction: column; height: 100%; }

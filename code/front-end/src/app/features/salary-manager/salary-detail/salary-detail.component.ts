@@ -1,56 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EmployeeService } from '../../core/services/employee.service';
-import { SalaryHistoryComponent } from '../salary-history/salary-history.component';
-import { SalaryEntryFormComponent } from '../salary-entry-form/salary-entry-form.component';
+import { CommonModule } from '@angular/common';
+import { EmployeeService } from "../../../core/services/employee.service";
+import { SalaryHistoryComponent } from "../salary-history/salary-history.component";
+import { SalaryEntryFormComponent } from "../salary-entry-form/salary-entry-form.component";
 
 @Component({
+  standalone: true,
   selector: 'app-salary-detail',
-  template: `
-    <div class="salary-detail">
-      @if (employee) {
-        <div class="employee-header">
-          <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
-          <p>{{ employee.empNo }} | {{ employee.dept }} | {{ employee.jobTitle }}</p>
-          <p>{{ employee.country }} | {{ employee.getEmploymentStatusLabel() }}</p>
-        </div>
-
-        <!-- Tabs -->
-        <div class="tabs">
-          <button [class.active]="tab === 'salary'" (click)="tab = 'salary'">Salary History</button>
-          <button [class.active]="tab === 'payroll'" (click)="tab = 'payroll'">Payroll Records</button>
-        </div>
-
-        <!-- Salary History Tab -->
-        @if (tab === 'salary') {
-          <app-salary-entry-form [employeeId]="employeeId" (saved)="onSalarySaved()"></app-salary-entry-form>
-          <app-salary-history [employeeId]="employeeId"></app-salary-history>
-        }
-
-        <!-- Payroll Records Tab -->
-        @if (tab === 'payroll') {
-          <p class="section-title">Payroll Records</p>
-          <table class="data-table">
-            <thead><tr><th>Period</th><th>Gross Pay</th><th>Net Pay</th><th>Status</th></tr></thead>
-            <tbody>
-              @for (record of payroll; track record.id) {
-                <tr>
-                  <td>{{ record.periodStart }} to {{ record.periodEnd }}</td>
-                  <td>${{ record.grossPay | number:'1.2-2' }}</td>
-                  <td>${{ record.netPay | number:'1.2-2' }}</td>
-                  <td><span class="badge">{{ record.payrollStatus }}</span></td>
-                </tr>
-              } @empty {
-                <tr><td colspan="4" class="empty">No payroll records found</td></tr>
-              }
-            </tbody>
-          </table>
-        }
-      } @else {
-        <p>Loading employee...</p>
-      }
-    </div>
-  `,
+  templateUrl: './salary-detail.component.html',
+  imports: [CommonModule, SalaryHistoryComponent, SalaryEntryFormComponent],
   styles: [`
     :host { display: block; padding: 20px; }
     .employee-header { margin-bottom: 16px; }
@@ -84,7 +43,7 @@ export class SalaryDetailComponent implements OnInit {
   }
 
   loadEmployee(): void {
-    this.employeeService.getById(this.employeeId).subscribe(emp => {
+    this.employeeService.getById(this.employeeId).subscribe((emp: any) => {
       this.employee = emp;
     });
   }

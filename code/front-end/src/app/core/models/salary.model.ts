@@ -1,3 +1,10 @@
+export interface AnalyticsSummary {
+  totalPayroll: number;
+  averageSalary: number;
+  medianSalary: number;
+  employeeCount: number;
+}
+
 export interface Salary {
   id: number;
   employeeId: number;

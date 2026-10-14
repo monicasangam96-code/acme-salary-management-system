@@ -19,12 +19,10 @@ public class Salary {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(
-            name = "fk_salary_employee",
-            onDelete = DeleteAction.CASCADE))
+    @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(name = "fk_salary_employee"))
     private Employee employee;
 
-    @Column(name = "employee_id", insertable = false, updatable = false)
+    @Column(name = "employee_id", insertable = false, updatable = false, nullable = false)
     private Long employeeId;
 
     @Column(name = "salary_amount", nullable = false, precision = 15, scale = 2)

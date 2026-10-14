@@ -70,8 +70,11 @@ public class EmployeeDetailResponse {
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     public Long getCreatedBy() { return createdBy; }
+    public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
     public BigDecimal getCurrentSalaryAmount() { return currentSalaryAmount; }
     public void setCurrentSalaryAmount(BigDecimal currentSalaryAmount) { this.currentSalaryAmount = currentSalaryAmount; }
     public String getCurrentCurrencyCode() { return currentCurrencyCode; }
@@ -81,7 +84,7 @@ public class EmployeeDetailResponse {
 
     // Map a Salary entity into the current salary fields
     public static EmployeeDetailResponse withCurrentSalary(EmployeeDetailResponse response,
-                                                            com.acme.salarymgmt.repository.SalaryRepository.AnalyticsSummaryResponse summary) {
+                                                            com.acme.salarymgmt.dto.response.AnalyticsSummaryResponse summary) {
         return response; // handled in service layer
     }
 }

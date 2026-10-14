@@ -2,7 +2,11 @@ package com.acme.salarymgmt.service;
 
 import com.acme.salarymgmt.dto.AnalyticsSummaryResponse;
 import com.acme.salarymgmt.dto.CurrencyItem;
+import com.acme.salarymgmt.dto.response.CountryBreakdownResponse;
+import com.acme.salarymgmt.dto.response.DepartmentBreakdownResponse;
+import com.acme.salarymgmt.dto.response.JobLevelBreakdownResponse;
 import com.acme.salarymgmt.model.Currency;
+import com.acme.salarymgmt.repository.CurrencyRepository;
 import com.acme.salarymgmt.repository.SalaryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,17 +46,17 @@ public class AnalyticsService {
     }
 
     @Transactional(readOnly = true)
-    public List<SalaryRepository.CountryBreakdownResponse> getByCountry(String currencyCode) {
+    public List<CountryBreakdownResponse> getByCountry(String currencyCode) {
         return salaryRepository.getAnalyticsByCountry(currencyCode);
     }
 
     @Transactional(readOnly = true)
-    public List<SalaryRepository.DepartmentBreakdownResponse> getByDepartment(String country, String currencyCode) {
+    public List<DepartmentBreakdownResponse> getByDepartment(String country, String currencyCode) {
         return salaryRepository.getAnalyticsByDepartment(country, currencyCode);
     }
 
     @Transactional(readOnly = true)
-    public List<SalaryRepository.JobLevelBreakdownResponse> getByJobLevel(String country, String dept, String currencyCode) {
+    public List<JobLevelBreakdownResponse> getByJobLevel(String country, String dept, String currencyCode) {
         return salaryRepository.getAnalyticsByJobLevel(country, dept, currencyCode);
     }
 

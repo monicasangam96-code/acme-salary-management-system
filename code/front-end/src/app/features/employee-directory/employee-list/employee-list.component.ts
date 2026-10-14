@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
-import { EmployeeService, PaginatedResponse } from '../../core/services/employee.service';
-import { Employee } from '../../core/models/employee.model';
-import { NotificationService } from '../../core/services/notification.service';
+import { EmployeeService, PaginatedResponse } from "../../../core/services/employee.service";
+import { Employee } from "../../../core/models/employee.model";
+import { NotificationService } from "../../../core/services/notification.service";
 
 @Component({
+  standalone: true,
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
-  styleUrl: './employee-list.component.css'
+  imports: [CommonModule, FormsModule],
 })
 export class EmployeeListComponent implements OnInit, OnDestroy {
   employees: Employee[] = [];
@@ -97,6 +98,11 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     if (!amount) return 'N/A';
     const symbol = this.getCurrencySymbol(currency || 'USD');
     return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+  }
+
+  addEmployee(): void {
+    // Navigate to salary manager to add a new employee
+    window.location.href = '/salary/new';
   }
 
   ngOnDestroy(): void {

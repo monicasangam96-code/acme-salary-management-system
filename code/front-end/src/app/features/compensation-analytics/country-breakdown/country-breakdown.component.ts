@@ -1,26 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnalyticsService, CountryBreakdown } from '../../core/services/analytics.service';
+import { AnalyticsService, CountryBreakdown } from "../../../core/services/analytics.service";
 
 @Component({
+  standalone: true,
   selector: 'app-country-breakdown',
-  template: `
-    <div class="chart-card">
-      <h3>Payroll by Country</h3>
-      <div class="bar-chart">
-        @for (item of data; track item.country) {
-          <div class="bar-row">
-            <span class="bar-label">{{ item.country }}</span>
-            <div class="bar-fill" [style.width.%]="getBarPercent(item.totalPayroll)">
-              <span class="bar-value">${{ (item.totalPayroll / 1000000).toFixed(1) }}M</span>
-            </div>
-          </div>
-        } @empty {
-          <p class="empty">Loading...</p>
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: './country-breakdown.component.html',
+  imports: [CommonModule],
   styles: [`
     :host { display: block; }
     .chart-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }

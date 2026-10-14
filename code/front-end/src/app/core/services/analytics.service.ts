@@ -3,6 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CountryBreakdown, DepartmentBreakdown, JobLevelBreakdown, AnalyticsSummary, CurrencyItem } from '../models/salary.model';
 
+// Re-export these types so consumers can import them from this module
+export type { CountryBreakdown, DepartmentBreakdown, JobLevelBreakdown, AnalyticsSummary, CurrencyItem };
+
 const API_URL = 'http://localhost:8080/api/v1';
 
 @Injectable({ providedIn: 'root' })

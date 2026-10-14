@@ -1,0 +1,19 @@
+<div class="salary-history">
+  <h3>Salary History</h3>
+  <table class="data-table">
+    <thead><tr><th>Effective Date</th><th>Amount</th><th>Currency</th><th>Status</th><th>Previous</th></tr></thead>
+    <tbody>
+      @for (salary of salaries; track salary.id) {
+        <tr>
+          <td>{{ salary.effectiveDate }}</td>
+          <td>{{ getCurrencySymbol(salary.currencyCode) }}{{ salary.salaryAmount | number:'1.2-2' }}</td>
+          <td>{{ salary.currencyCode }}</td>
+          <td><span class="badge" [class.current]="salary.status === 'CURRENT'">{{ salary.status }}</span></td>
+          <td>{{ salary.previousSalaryAmount ? (getCurrencySymbol(salary.currencyCode) + salary.previousSalaryAmount | number:'1.2-2') : '-' }}</td>
+        </tr>
+      } @empty {
+        <tr><td colspan="5" class="empty">No salary history</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

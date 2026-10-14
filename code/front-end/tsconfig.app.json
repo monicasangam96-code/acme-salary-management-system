@@ -1,0 +1,38 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": []
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts",
+    "src/app/app.component.ts",
+    "src/app/app.config.ts",
+    "src/app/routes.ts",
+    "src/app/core/auth/auth.guard.ts",
+    "src/app/core/auth/auth.interceptor.ts",
+    "src/app/core/auth/auth.service.ts",
+    "src/app/core/models/analytics.model.ts",
+    "src/app/core/models/employee.model.ts",
+    "src/app/core/models/salary.model.ts",
+    "src/app/core/services/analytics.service.ts",
+    "src/app/core/services/employee.service.ts",
+    "src/app/core/services/notification.service.ts",
+    "src/app/core/services/report.service.ts",
+    "src/app/features/auth/login/login.component.ts",
+    "src/app/features/compensation-analytics/country-breakdown/country-breakdown.component.ts",
+    "src/app/features/compensation-analytics/dashboard-overview/dashboard-overview.component.ts",
+    "src/app/features/compensation-analytics/department-breakdown/department-breakdown.component.ts",
+    "src/app/features/employee-directory/employee-list/employee-list.component.ts",
+    "src/app/features/reports/report-builder/report-builder.component.ts",
+    "src/app/features/salary-manager/salary-detail/salary-detail.component.ts",
+    "src/app/features/salary-manager/salary-entry-form/salary-entry-form.component.ts",
+    "src/app/features/salary-manager/salary-history/salary-history.component.ts",
+    "src/app/shared/kpi-card/kpi-card.component.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}

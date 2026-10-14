@@ -6,22 +6,23 @@ services:
     image: mysql:9.7
     container_name: acme-db
     restart: unless-stopped
-    env_file: ../build/dev/.env
+    env_file: ../../build/dev/.env
     volumes:
       - mysql-data:/var/lib/mysql
-      - ../code/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-      - ../code/db/init_data.sql:/docker-entrypoint-initdb.d/02-init.sql:ro
-      - ../code/db/seed_sample.sql:/docker-entrypoint-initdb.d/03-seed.sql:ro
+      - ../../code/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../../code/db/init_data.sql:/docker-entrypoint-initdb.d/02-init.sql:ro
+      - ../../code/db/seed_sample.sql:/docker-entrypoint-initdb.d/03-seed.sql:ro
     command: >
-      --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
       --innodb-buffer-pool-size=256M
       --log-bin-trust-function-creators=1
+      --socket=/var/run/mysqld/mysql.sock
+      --pid-file=/var/run/mysqld/mysqld.pid
     ports:
-      - "3306:3306"
+      - "3310:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
       interval: 15s
       timeout: 5s
       retries: 10
@@ -36,7 +37,7 @@ services:
       dockerfile: Dockerfile
     container_name: acme-api
     restart: unless-stopped
-    env_file: ../build/dev/.env
+    env_file: ../../build/dev/.env
     ports:
       - "8080:8080"
     depends_on:

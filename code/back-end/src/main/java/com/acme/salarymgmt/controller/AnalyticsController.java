@@ -2,6 +2,9 @@ package com.acme.salarymgmt.controller;
 
 import com.acme.salarymgmt.dto.AnalyticsSummaryResponse;
 import com.acme.salarymgmt.dto.CurrencyItem;
+import com.acme.salarymgmt.dto.response.CountryBreakdownResponse;
+import com.acme.salarymgmt.dto.response.DepartmentBreakdownResponse;
+import com.acme.salarymgmt.dto.response.JobLevelBreakdownResponse;
 import com.acme.salarymgmt.service.AnalyticsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,20 +30,20 @@ public class AnalyticsController {
     }
 
     @GetMapping("/by-country")
-    public ResponseEntity<List<com.acme.salarymgmt.repository.SalaryRepository.CountryBreakdownResponse>> byCountry(
+    public ResponseEntity<List<CountryBreakdownResponse>> byCountry(
             @RequestParam(required = false) String currency) {
         return ResponseEntity.ok(analyticsService.getByCountry(currency));
     }
 
     @GetMapping("/by-department")
-    public ResponseEntity<List<com.acme.salarymgmt.repository.SalaryRepository.DepartmentBreakdownResponse>> byDepartment(
+    public ResponseEntity<List<DepartmentBreakdownResponse>> byDepartment(
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String currency) {
         return ResponseEntity.ok(analyticsService.getByDepartment(country, currency));
     }
 
     @GetMapping("/by-job-level")
-    public ResponseEntity<List<com.acme.salarymgmt.repository.SalaryRepository.JobLevelBreakdownResponse>> byJobLevel(
+    public ResponseEntity<List<JobLevelBreakdownResponse>> byJobLevel(
             @RequestParam(required = false) String country,
             @RequestParam(required = false) String dept,
             @RequestParam(required = false) String currency) {

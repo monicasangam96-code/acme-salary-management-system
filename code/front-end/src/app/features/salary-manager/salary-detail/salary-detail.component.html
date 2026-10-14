@@ -1,0 +1,43 @@
+<div class="salary-detail">
+  @if (employee) {
+    <div class="employee-header">
+      <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
+      <p>{{ employee.empNo }} | {{ employee.dept }} | {{ employee.jobTitle }}</p>
+      <p>{{ employee.country }} | {{ employee.getEmploymentStatusLabel() }}</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button [class.active]="tab === 'salary'" (click)="tab = 'salary'">Salary History</button>
+      <button [class.active]="tab === 'payroll'" (click)="tab = 'payroll'">Payroll Records</button>
+    </div>
+
+    <!-- Salary History Tab -->
+    @if (tab === 'salary') {
+      <app-salary-entry-form [employeeId]="employeeId" (saved)="onSalarySaved()"></app-salary-entry-form>
+      <app-salary-history [employeeId]="employeeId"></app-salary-history>
+    }
+
+    <!-- Payroll Records Tab -->
+    @if (tab === 'payroll') {
+      <p class="section-title">Payroll Records</p>
+      <table class="data-table">
+        <thead><tr><th>Period</th><th>Gross Pay</th><th>Net Pay</th><th>Status</th></tr></thead>
+        <tbody>
+          @for (record of payroll; track record.id) {
+            <tr>
+              <td>{{ record.periodStart }} to {{ record.periodEnd }}</td>
+              <td>${{ record.grossPay | number:'1.2-2' }}</td>
+              <td>${{ record.netPay | number:'1.2-2' }}</td>
+              <td><span class="badge">{{ record.payrollStatus }}</span></td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="empty">No payroll records found</td></tr>
+          }
+        </tbody>
+      </table>
+    }
+  } @else {
+    <p>Loading employee...</p>
+  }
+</div>

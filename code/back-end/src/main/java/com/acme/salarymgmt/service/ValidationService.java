@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
-public class ValidationService {
+public class ValidationService implements Validator {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+._-]+@[A-Za-z0-9.-]+$");
     private static final BigDecimal MIN_SALARY = new BigDecimal("0.01");

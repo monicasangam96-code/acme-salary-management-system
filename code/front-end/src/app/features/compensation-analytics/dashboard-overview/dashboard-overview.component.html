@@ -1,0 +1,17 @@
+<div class="dashboard">
+  <h2>Compensation Dashboard</h2>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <app-kpi-card [title]="'Total Annual Payroll'" [value]="summary.totalPayroll" color="#0d6efd"></app-kpi-card>
+    <app-kpi-card [title]="'Average Salary'" [value]="summary.averageSalary" color="#198754"></app-kpi-card>
+    <app-kpi-card [title]="'Median Salary'" [value]="summary.medianSalary" color="#fd7e14"></app-kpi-card>
+    <app-kpi-card [title]="'Employees'" [value]="summary.employeeCount" color="#6f42c1"></app-kpi-card>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <app-country-breakdown></app-country-breakdown>
+    <app-department-breakdown></app-department-breakdown>
+  </div>
+</div>

@@ -1,0 +1,222 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.acme:salary-mgmt >------------------------
+[INFO] Building ACME Salary Management System 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ salary-mgmt ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ salary-mgmt ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ salary-mgmt ---
+[INFO] Copying 2 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ salary-mgmt ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ salary-mgmt ---
+[WARNING] useSystemClassLoader setting has no effect when not forking
+[WARNING] The parameter forkCount should likely not be 0. Forking a JVM for tests improves test accuracy. Ensure to have a <forkCount> >= 1.
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] Running com.acme.salarymgmt.integration.AnalyticsIntegrationTest
+21:34:12.710 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.acme.salarymgmt.integration.AnalyticsIntegrationTest]: AnalyticsIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:34:12.776 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.acme.salarymgmt.SalaryManagementApplication for test class com.acme.salarymgmt.integration.AnalyticsIntegrationTest
+21:34:12.842 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+21:34:12.845 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+21:34:13.084 [main] INFO org.testcontainers.dockerclient.DockerMachineClientProviderStrategy -- docker-machine executable was not found on PATH ([C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot\bin, C:\Users\bsang\bin, C:\Program Files\Git\mingw64\bin, C:\Program Files\Git\usr\local\bin, C:\Program Files\Git\usr\bin, C:\Program Files\Git\usr\bin, C:\Program Files\Git\mingw64\bin, C:\Program Files\Git\usr\bin, C:\Users\bsang\bin, C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin\x64, C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin, C:\Program Files\Common Files\Oracle\Java\javapath, C:\Program Files (x86)\Common Files\Oracle\Java\java8path, C:\Program Files (x86)\Common Files\Oracle\Java\javapath, C:\WINDOWS\system32, C:\WINDOWS, C:\WINDOWS\System32\Wbem, C:\WINDOWS\System32\WindowsPowerShell\v1.0, C:\WINDOWS\System32\OpenSSH, C:\Program Files\dotnet, C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR, C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common, C:\Program Files\nodejs, C:\Program Files\Git\cmd, C:\Users\bsang\.local\bin, C:\Program Files\apache-maven-3.9.15\bin, C:\Program Files\WireGuard, C:\Program Files\WireGuard, C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit, C:\Program Files\CMake\bin, C:\Program Files\NVIDIA Corporation\Nsight Compute 2026.1.1, C:\Program Files\Docker\Docker\resources\bin, C:\Program Files\Amazon\AWSCLIV2, C:\Users\bsang\develop\flutter\bin, C:\Users\bsang\AppData\Local\Programs\OpenAI\Codex\bin, C:\Users\bsang\.unsloth\studio\bin, C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.2\bin, C:\Users\bsang\AppData\Local\Programs\Python\Python313\Scripts, C:\Users\bsang\AppData\Local\Programs\Python\Python313, C:\Users\bsang\AppData\Local\Programs\Python\Launcher, C:\Users\bsang\.local\bin, C:\Program Files\MySQL\MySQL Shell 8.0\bin, C:\Users\bsang\AppData\Local\Microsoft\WindowsApps, C:\Users\bsang\.lmstudio\bin, C:\Users\bsang\AppData\Local\Python\bin, C:\Users\bsang\AppData\Local\Programs\Ollama, C:\Users\bsang\AppData\Roaming\npm, C:\Users\bsang\AppData\Local\Programs\Microsoft VS Code\bin, C:\Program Files\JetBrains\PyCharm 2026.1.1\bin, C:\Users\bsang\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0-full_build\bin, C:\Users\bsang\AppData\Local\Programs\cursor\resources\app\bin, C:\Users\bsang\AppData\Local\Microsoft\WinGet\Packages\Anthropic.ClaudeCode_Microsoft.Winget.Source_8wekyb3d8bbwe, C:\Program Files\Git\usr\bin\vendor_perl, C:\Program Files\Git\usr\bin\core_perl])
+21:34:13.084 [main] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy -- Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
+	NpipeSocketClientProviderStrategy: failed with exception BadRequestException (Status 400: {"ID":"","Containers":0,"ContainersRunning":0,"ContainersPaused":0,"ContainersStopped":0,"Images":0,"Driver":"","DriverStatus":null,"Plugins":{"Volume":null,"Network":null,"Authorization":null,"Log":null},"MemoryLimit":false,"SwapLimit":false,"CpuCfsPeriod":false,"CpuCfsQuota":false,"CPUShares":false,"CPUSet":false,"PidsLimit":false,"IPv4Forwarding":false,"Debug":false,"NFd":0,"OomKillDisable":false,"NGoroutines":0,"SystemTime":"","LoggingDriver":"","CgroupDriver":"","NEventsListener":0,"KernelVersion":"","OperatingSystem":"","OSVersion":"","OSType":"","Architecture":"","IndexServerAddress":"","RegistryConfig":null,"NCPU":0,"MemTotal":0,"GenericResources":null,"DockerRootDir":"","HttpProxy":"","HttpsProxy":"","NoProxy":"","Name":"","Labels":["com.docker.desktop.address=npipe://\\\\.\\pipe\\docker_cli"],"ExperimentalBuild":false,"ServerVersion":"","Runtimes":null,"DefaultRuntime":"","Swarm":{"NodeID":"","NodeAddr":"","LocalNodeState":"","ControlAvailable":false,"Error":"","RemoteManagers":null},"LiveRestoreEnabled":false,"Isolation":"","InitBinary":"","ContainerdCommit":{"ID":""},"RuncCommit":{"ID":""},"InitCommit":{"ID":""},"SecurityOptions":null,"CDISpecDirs":null,"Warnings":null})As no valid configuration was found, execution cannot continue.
+See https://java.testcontainers.org/on_failure.html for more details.
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.519 s <<< FAILURE! -- in com.acme.salarymgmt.integration.AnalyticsIntegrationTest
+[ERROR] com.acme.salarymgmt.integration.AnalyticsIntegrationTest -- Time elapsed: 0.519 s <<< ERROR!
+java.lang.IllegalStateException: Could not find a valid Docker environment. Please see logs and check configuration
+	at org.testcontainers.dockerclient.DockerClientProviderStrategy.lambda$getFirstValidStrategy$7(DockerClientProviderStrategy.java:277)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at org.testcontainers.dockerclient.DockerClientProviderStrategy.getFirstValidStrategy(DockerClientProviderStrategy.java:268)
+	at org.testcontainers.DockerClientFactory.getOrInitializeStrategy(DockerClientFactory.java:152)
+	at org.testcontainers.DockerClientFactory.client(DockerClientFactory.java:194)
+	at org.testcontainers.DockerClientFactory$1.getDockerClient(DockerClientFactory.java:106)
+	at com.github.dockerjava.api.DockerClientDelegate.authConfig(DockerClientDelegate.java:109)
+	at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:329)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.start(TestcontainersExtension.java:280)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.access$200(TestcontainersExtension.java:267)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$null$4(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$startContainers$5(TestcontainersExtension.java:82)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.startContainers(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.beforeAll(TestcontainersExtension.java:56)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] Running com.acme.salarymgmt.integration.EmployeeIntegrationTest
+21:34:13.116 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.acme.salarymgmt.integration.EmployeeIntegrationTest]: EmployeeIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:34:13.118 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.acme.salarymgmt.SalaryManagementApplication for test class com.acme.salarymgmt.integration.EmployeeIntegrationTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.011 s <<< FAILURE! -- in com.acme.salarymgmt.integration.EmployeeIntegrationTest
+[ERROR] com.acme.salarymgmt.integration.EmployeeIntegrationTest -- Time elapsed: 0.011 s <<< ERROR!
+java.lang.IllegalStateException: Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration
+	at org.testcontainers.dockerclient.DockerClientProviderStrategy.getFirstValidStrategy(DockerClientProviderStrategy.java:232)
+	at org.testcontainers.DockerClientFactory.getOrInitializeStrategy(DockerClientFactory.java:152)
+	at org.testcontainers.DockerClientFactory.client(DockerClientFactory.java:194)
+	at org.testcontainers.DockerClientFactory$1.getDockerClient(DockerClientFactory.java:106)
+	at com.github.dockerjava.api.DockerClientDelegate.authConfig(DockerClientDelegate.java:109)
+	at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:329)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.start(TestcontainersExtension.java:280)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.access$200(TestcontainersExtension.java:267)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$null$4(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$startContainers$5(TestcontainersExtension.java:82)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.startContainers(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.beforeAll(TestcontainersExtension.java:56)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] Running com.acme.salarymgmt.integration.ReportExportIntegrationTest
+21:34:13.131 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.acme.salarymgmt.integration.ReportExportIntegrationTest]: ReportExportIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:34:13.133 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.acme.salarymgmt.SalaryManagementApplication for test class com.acme.salarymgmt.integration.ReportExportIntegrationTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.008 s <<< FAILURE! -- in com.acme.salarymgmt.integration.ReportExportIntegrationTest
+[ERROR] com.acme.salarymgmt.integration.ReportExportIntegrationTest -- Time elapsed: 0.008 s <<< ERROR!
+java.lang.IllegalStateException: Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration
+	at org.testcontainers.dockerclient.DockerClientProviderStrategy.getFirstValidStrategy(DockerClientProviderStrategy.java:232)
+	at org.testcontainers.DockerClientFactory.getOrInitializeStrategy(DockerClientFactory.java:152)
+	at org.testcontainers.DockerClientFactory.client(DockerClientFactory.java:194)
+	at org.testcontainers.DockerClientFactory$1.getDockerClient(DockerClientFactory.java:106)
+	at com.github.dockerjava.api.DockerClientDelegate.authConfig(DockerClientDelegate.java:109)
+	at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:329)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.start(TestcontainersExtension.java:280)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.access$200(TestcontainersExtension.java:267)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$null$4(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$startContainers$5(TestcontainersExtension.java:82)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.startContainers(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.beforeAll(TestcontainersExtension.java:56)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] Running com.acme.salarymgmt.integration.SalaryIntegrationTest
+21:34:13.143 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.acme.salarymgmt.integration.SalaryIntegrationTest]: SalaryIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:34:13.146 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.acme.salarymgmt.SalaryManagementApplication for test class com.acme.salarymgmt.integration.SalaryIntegrationTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.010 s <<< FAILURE! -- in com.acme.salarymgmt.integration.SalaryIntegrationTest
+[ERROR] com.acme.salarymgmt.integration.SalaryIntegrationTest -- Time elapsed: 0.010 s <<< ERROR!
+java.lang.IllegalStateException: Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration
+	at org.testcontainers.dockerclient.DockerClientProviderStrategy.getFirstValidStrategy(DockerClientProviderStrategy.java:232)
+	at org.testcontainers.DockerClientFactory.getOrInitializeStrategy(DockerClientFactory.java:152)
+	at org.testcontainers.DockerClientFactory.client(DockerClientFactory.java:194)
+	at org.testcontainers.DockerClientFactory$1.getDockerClient(DockerClientFactory.java:106)
+	at com.github.dockerjava.api.DockerClientDelegate.authConfig(DockerClientDelegate.java:109)
+	at org.testcontainers.containers.GenericContainer.start(GenericContainer.java:329)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.start(TestcontainersExtension.java:280)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension$StoreAdapter.access$200(TestcontainersExtension.java:267)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$null$4(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.lambda$startContainers$5(TestcontainersExtension.java:82)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.startContainers(TestcontainersExtension.java:82)
+	at org.testcontainers.junit.jupiter.TestcontainersExtension.beforeAll(TestcontainersExtension.java:56)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] Running com.acme.salarymgmt.service.AnalyticsServiceTest
+[INFO] Running com.acme.salarymgmt.service.AnalyticsServiceTest$GetCurrencyBreakdownTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.897 s -- in com.acme.salarymgmt.service.AnalyticsServiceTest$GetCurrencyBreakdownTests
+[INFO] Running com.acme.salarymgmt.service.AnalyticsServiceTest$GetByJobLevelTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.acme.salarymgmt.service.AnalyticsServiceTest$GetByJobLevelTests
+[INFO] Running com.acme.salarymgmt.service.AnalyticsServiceTest$GetByDepartmentTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.acme.salarymgmt.service.AnalyticsServiceTest$GetByDepartmentTests
+[INFO] Running com.acme.salarymgmt.service.AnalyticsServiceTest$GetByCountryTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.acme.salarymgmt.service.AnalyticsServiceTest$GetByCountryTests
+[INFO] Running com.acme.salarymgmt.service.AnalyticsServiceTest$GetSummaryTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in com.acme.salarymgmt.service.AnalyticsServiceTest$GetSummaryTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.993 s -- in com.acme.salarymgmt.service.AnalyticsServiceTest
+[INFO] Running com.acme.salarymgmt.service.EmployeeServiceTest
+[INFO] Running com.acme.salarymgmt.service.EmployeeServiceTest$GetSalaryHistoryTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.112 s -- in com.acme.salarymgmt.service.EmployeeServiceTest$GetSalaryHistoryTests
+[INFO] Running com.acme.salarymgmt.service.EmployeeServiceTest$SoftDeleteTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in com.acme.salarymgmt.service.EmployeeServiceTest$SoftDeleteTests
+[INFO] Running com.acme.salarymgmt.service.EmployeeServiceTest$ToggleStatusTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.acme.salarymgmt.service.EmployeeServiceTest$ToggleStatusTests
+[INFO] Running com.acme.salarymgmt.service.EmployeeServiceTest$CreateTests
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in com.acme.salarymgmt.service.EmployeeServiceTest$CreateTests
+[INFO] Running com.acme.salarymgmt.service.EmployeeServiceTest$GetByIdTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.acme.salarymgmt.service.EmployeeServiceTest$GetByIdTests
+[INFO] Running com.acme.salarymgmt.service.EmployeeServiceTest$ListActiveTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.acme.salarymgmt.service.EmployeeServiceTest$ListActiveTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.228 s -- in com.acme.salarymgmt.service.EmployeeServiceTest
+[INFO] Running com.acme.salarymgmt.service.ReportServiceTest
+[INFO] Running com.acme.salarymgmt.service.ReportServiceTest$ExportEmployeesCsvTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.acme.salarymgmt.service.ReportServiceTest$ExportEmployeesCsvTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.acme.salarymgmt.service.ReportServiceTest
+[INFO] Running com.acme.salarymgmt.service.SalaryServiceTest
+[INFO] Running com.acme.salarymgmt.service.SalaryServiceTest$UpdateSalaryTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.acme.salarymgmt.service.SalaryServiceTest$UpdateSalaryTests
+[INFO] Running com.acme.salarymgmt.service.SalaryServiceTest$GetSalaryByIdTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.acme.salarymgmt.service.SalaryServiceTest$GetSalaryByIdTests
+[INFO] Running com.acme.salarymgmt.service.SalaryServiceTest$GetSalaryHistoryTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.acme.salarymgmt.service.SalaryServiceTest$GetSalaryHistoryTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in com.acme.salarymgmt.service.SalaryServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.AnalyticsServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetCurrencyBreakdownTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetCurrencyBreakdownTests
+[INFO] Running com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetByJobLevelTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetByJobLevelTests
+[INFO] Running com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetByDepartmentTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetByDepartmentTests
+[INFO] Running com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetByCountryTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetByCountryTests
+[INFO] Running com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetSummaryTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.acme.salarymgmt.service.unit.AnalyticsServiceTest$GetSummaryTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.acme.salarymgmt.service.unit.AnalyticsServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest$GetSalaryHistoryTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest$GetSalaryHistoryTests
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest$SoftDeleteTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest$SoftDeleteTests
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest$ToggleStatusTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest$ToggleStatusTests
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest$UpdateTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest$UpdateTests
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest$CreateTests
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest$CreateTests
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest$GetByIdTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest$GetByIdTests
+[INFO] Running com.acme.salarymgmt.service.unit.EmployeeServiceTest$ListActiveTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest$ListActiveTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in com.acme.salarymgmt.service.unit.EmployeeServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.ReportServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.ReportServiceTest$ExportEmployeesCsvTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.acme.salarymgmt.service.unit.ReportServiceTest$ExportEmployeesCsvTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.acme.salarymgmt.service.unit.ReportServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.SalaryServiceTest
+[INFO] Running com.acme.salarymgmt.service.unit.SalaryServiceTest$UpdateSalaryTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.acme.salarymgmt.service.unit.SalaryServiceTest$UpdateSalaryTests
+[INFO] Running com.acme.salarymgmt.service.unit.SalaryServiceTest$GetSalaryByIdTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.acme.salarymgmt.service.unit.SalaryServiceTest$GetSalaryByIdTests
+[INFO] Running com.acme.salarymgmt.service.unit.SalaryServiceTest$GetSalaryHistoryTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.acme.salarymgmt.service.unit.SalaryServiceTest$GetSalaryHistoryTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.acme.salarymgmt.service.unit.SalaryServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Errors: 
+[ERROR]   AnalyticsIntegrationTest » IllegalState Could not find a valid Docker environment. Please see logs and check configuration
+[ERROR]   EmployeeIntegrationTest » IllegalState Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration
+[ERROR]   ReportExportIntegrationTest » IllegalState Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration
+[ERROR]   SalaryIntegrationTest » IllegalState Previous attempts to find a Docker environment failed. Will not retry. Please see logs and check configuration
+[INFO] 
+[ERROR] Tests run: 75, Failures: 0, Errors: 4, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.245 s
+[INFO] Finished at: 2026-10-13T21:34:14-04:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.1.2:test (default-test) on project salary-mgmt: 
+[ERROR] 
+[ERROR] Please refer to C:\Users\bsang\Documents\ACME\code\back-end\target\surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

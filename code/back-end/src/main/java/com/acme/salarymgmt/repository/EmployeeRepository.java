@@ -20,7 +20,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     boolean existsByEmail(String email);
 
     @Query("SELECT e FROM Employee e WHERE e.isActive = true AND " +
-           "(:search IS NULL OR LOWER(CONCAT(e.firstName, ' ', e.lastName)) LIKE %:search% OR e.email LIKE %:search%)")
+           "(:search IS NULL OR LOWER(CONCAT(e.firstName, ' ', e.lastName)) LIKE CONCAT('%', LOWER(:search), '%') OR LOWER(e.email) LIKE CONCAT('%', LOWER(:search), '%'))")
     Page<Employee> searchActive(
             @Param("search") String search, Pageable pageable);
 
@@ -28,7 +28,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
            "(:country IS NULL OR e.country = :country) AND " +
            "(:dept IS NULL OR e.dept = :dept) AND " +
            "(:status IS NULL OR e.employmentStatus = :status) AND " +
-           "(:search IS NULL OR LOWER(CONCAT(e.firstName, ' ', e.lastName)) LIKE %:search% OR e.email LIKE %:search%)")
+           "(:search IS NULL OR LOWER(CONCAT(e.firstName, ' ', e.lastName)) LIKE CONCAT('%', LOWER(:search), '%') OR LOWER(e.email) LIKE CONCAT('%', LOWER(:search), '%'))")
     Page<Employee> searchWithFilters(
             @Param("country") String country,
             @Param("dept") String dept,

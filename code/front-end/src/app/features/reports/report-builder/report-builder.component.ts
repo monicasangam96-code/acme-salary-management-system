@@ -1,57 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AnalyticsService, DepartmentBreakdown, CountryBreakdown } from '../../core/services/analytics.service';
-import { ReportService } from '../../core/services/report.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AnalyticsService, DepartmentBreakdown, CountryBreakdown } from "../../../core/services/analytics.service";
+import { ReportService } from "../../../core/services/report.service";
 
 @Component({
+  standalone: true,
   selector: 'app-report-builder',
-  template: `
-    <div class="reports-page">
-      <h2>Reports</h2>
-
-      <!-- HR Question Templates -->
-      <div class="template-section">
-        <h3>HR Question Templates</h3>
-        <select [(ngModel)]="selectedTemplate" (change)="onTemplateSelect()" class="template-select">
-          <option value="">-- Select a question --</option>
-          <option value="avg-by-country">What is the average salary in each country?</option>
-          <option value="highest-departments">Which departments have the highest payroll?</option>
-          <option value="level-distribution">How are salaries distributed by job level?</option>
-        </select>
-      </div>
-
-      <!-- Results Table -->
-      @if (selectedTemplate === 'avg-by-country') {
-        <div class="results-table">
-          <h3>Average Salary by Country</h3>
-          <table class="data-table">
-            <thead><tr><th>Country</th><th>Employee Count</th><th>Total Payroll</th></tr></thead>
-            <tbody>
-              @for (item of countryData; track item.country) {
-                <tr><td>{{ item.country }}</td><td>{{ item.count }}</td><td>${{ (item.totalPayroll / 1000000).toFixed(2) }}M</td></tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      } @if (selectedTemplate === 'highest-departments') {
-        <div class="results-table">
-          <h3>Highest Payroll Departments</h3>
-          <table class="data-table">
-            <thead><tr><th>Department</th><th>Employee Count</th><th>Total Payroll</th></tr></thead>
-            <tbody>
-              @for (item of deptData; track item.department) {
-                <tr><td>{{ item.department }}</td><td>{{ item.count }}</td><td>${{ (item.totalPayroll / 1000).toFixed(0) }}K</td></tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      }
-
-      <!-- Export Button -->
-      <div class="export-section">
-        <button class="btn-export" (click)="onExport()">Download CSV Export</button>
-      </div>
-    </div>
-  `,
+  templateUrl: './report-builder.component.html',
+  imports: [CommonModule, FormsModule],
   styles: [`
     :host { display: block; padding: 20px; }
     h2 { margin-bottom: 16px; }
