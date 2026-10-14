@@ -1,0 +1,167 @@
+<div class="employee-directory">
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <input type="text" placeholder="Search by name or email..." class="search-input"
+           [value]="searchQuery" (input)="onSearch($any($event.target).value)">
+
+    <select [(ngModel)]="countryFilter" (change)="loadEmployees()" class="filter-select">
+      <option value="">All Countries</option>
+      @for (c of countries; track c) { <option [value]="c">{{ c }}</option> }
+    </select>
+
+    <select [(ngModel)]="deptFilter" (change)="loadEmployees()" class="filter-select">
+      <option value="">All Departments</option>
+      @for (d of departments; track d) { <option [value]="d">{{ d }}</option> }
+    </select>
+
+    <select [(ngModel)]="statusFilter" (change)="loadEmployees()" class="filter-select">
+      <option value="ACTIVE">Active</option>
+      <option value="TERMINATED">Terminated</option>
+      <option value="">All Statuses</option>
+    </select>
+
+    <button class="btn-add" title="Add employee" (click)="addEmployee()">+ Add Employee</button>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>Name</th>
+          <th>Country</th>
+          <th>Department</th>
+          <th>Job Title</th>
+          <th>Status</th>
+          <th>Salary</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (emp of employees; track emp.id) {
+        <tr class="employee-row" (click)="viewEmployee(emp.id)">
+          <td>{{ emp.empNo }}</td>
+          <td>{{ emp.firstName }} {{ emp.lastName }}</td>
+          <td>{{ emp.country }}</td>
+          <td>{{ emp.dept }}</td>
+          <td>{{ emp.jobTitle }}</td>
+          <td>
+            <span class="status-badge" [class.active]="emp.employmentStatus === 'ACTIVE'"
+                  [class.terminated]="emp.employmentStatus === 'TERMINATED'">
+              {{ emp.employmentStatus }}
+            </span>
+          </td>
+          <td>{{ formatSalary(emp.currentSalaryAmount, emp.currentCurrencyCode) }}</td>
+          <td class="actions">
+            @if (isAdmin()) {
+            <button class="btn-icon" title="Edit" (click)="$event.stopPropagation(); editEmployee(emp.id)">
+              &#9998;
+            </button>
+            <button class="btn-icon btn-delete" title="Delete" (click)="$event.stopPropagation(); onDeleteEmployee(emp.id, emp.empNo)">
+              &#128465;
+            </button>
+            }
+          </td>
+        </tr>
+        } @empty {
+        <tr><td colspan="8" class="empty-state">No employees found</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+    <div class="pagination">
+      <button [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)" class="page-btn">&laquo;</button>
+      @for (p of getPageNumbers(); track p) {
+        <span class="page-number">{{ p }}</span>
+      }
+      <button [disabled]="currentPage >= totalPages - 1" (click)="onPageChange(currentPage + 1)" class="page-btn">&raquo;</button>
+    </div>
+    <div class="pagination-info">Showing {{ employees.length }} of {{ totalElements }} employees</div>
+    }
+  </div>
+</div>
+
+<style>
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+}
+.btn-add {
+  padding: 8px 16px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+.data-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+.employee-row:hover { background: #f1f3f5; cursor: pointer; }
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.status-badge.active { background: #d4edda; color: #155724; }
+.status-badge.terminated { background: #f8d7da; color: #721c24; }
+.pagination {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 16px;
+}
+.page-btn, .page-number {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+.page-number.current-page { background: #0d6efd; color: white; }
+.pagination-info {
+  text-align: center;
+  margin-top: 8px;
+  color: #6c757d;
+  font-size: 14px;
+}
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+}
+.btn-icon { background: none; border: none; cursor: pointer; font-size: 16px; }
+.btn-delete { color: #dc3545; }
+.actions { white-space: nowrap; }
+</style>
