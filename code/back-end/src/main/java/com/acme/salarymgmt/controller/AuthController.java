@@ -2,6 +2,7 @@ package com.acme.salarymgmt.controller;
 
 import com.acme.salarymgmt.dto.AuthResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody Map<String, String> credentials,
-                                               HttpServletRequest request) {
+                                               HttpServletRequest request,
+                                               HttpServletResponse response) {
         String email = credentials.get("email");
         String password = credentials.get("password");
 
@@ -38,6 +40,11 @@ public class AuthController {
                     "userName", "System Admin",
                     "role", "HR_MANAGER"
             ));
+
+            // Ensure the session cookie is sent to the client
+            response.setHeader("Set-Cookie",
+                "JSESSIONID=" + session.getId() +
+                "; Path=/; HttpOnly; SameSite=Lax");
 
             return ResponseEntity.ok(new AuthResponse(
                     session.getId(), 1L, "System Admin", "HR_MANAGER"));
@@ -52,6 +59,11 @@ public class AuthController {
                     "userName", "HR Analyst",
                     "role", "HR_ANALYST"
             ));
+
+            // Ensure the session cookie is sent to the client
+            response.setHeader("Set-Cookie",
+                "JSESSIONID=" + session.getId() +
+                "; Path=/; HttpOnly; SameSite=Lax");
 
             return ResponseEntity.ok(new AuthResponse(
                     session.getId(), 2L, "HR Analyst", "HR_ANALYST"));

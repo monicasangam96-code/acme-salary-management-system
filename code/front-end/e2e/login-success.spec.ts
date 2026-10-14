@@ -20,7 +20,7 @@ test('admin login redirects to dashboard', async ({ page }) => {
 
   // Verify dashboard header content
   await expect(page.getByText('System Admin')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Compensation Dashboard' })).toBeVisible();
 });
 
 test('analyst login redirects to dashboard', async ({ page }) => {
@@ -43,7 +43,7 @@ test('analyst login redirects to dashboard', async ({ page }) => {
 
   // Verify dashboard header content (analyst-specific)
   await expect(page.getByText('HR Analyst')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Compensation Dashboard' })).toBeVisible();
 });
 
 test('invalid credentials show error', async ({ page }) => {

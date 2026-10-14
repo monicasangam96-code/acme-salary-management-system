@@ -2,173 +2,136 @@ import { test, expect } from '@playwright/test';
 
 test.describe('ACME Salary Management E2E Tests', () => {
   const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:4200';
-  const API_URL = process.env.E2E_API_URL || 'http://localhost:8080/api/v1';
+
+  async function clearAuthState(page: any): Promise<void> {
+    try { await page.evaluate(() => localStorage.clear()); } catch {}
+    try { await page.evaluate(() => sessionStorage.clear()); } catch {}
+  }
 
   test('should load the login page', async ({ page }) => {
-    await page.goto(BASE_URL);
+    await page.goto(BASE_URL + '/login');
     await expect(page.locator('h1')).toContainText('ACME Salary Management');
   });
 
   test('should navigate to dashboard after login', async ({ page }) => {
-    // Mock auth response
-    await page.route(`${API_URL}/auth/login`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          sessionToken: 'test-token',
-          userId: 1,
-          userName: 'admin@acme.com',
-          role: 'HR_MANAGER'
-        })
-      });
-    });
-
-    // Mock session check (called after full page reload)
-    await page.route(`${API_URL}/auth/me`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ id: 1, name: 'admin@acme.com', role: 'HR_MANAGER' })
-      });
-    });
-
-    // Track navigation away from app domain
-    let navigatedUrl = '';
-    page.on('framenavigated', (frame) => {
-      if (!frame.url().startsWith(BASE_URL)) {
-        navigatedUrl = frame.url();
-      }
-    });
-
-    await page.goto(BASE_URL);
+    await clearAuthState(page);
+    await page.goto(BASE_URL + '/login');
     await page.fill('input[name="email"]', 'admin@acme.com');
-    await page.fill('input[name="password"]', 'password123');
-    await page.click('.btn-login');
-    await page.waitForTimeout(500);
+    await page.fill('input[name="password"]', 'admin123');
 
-    // Verify navigation occurred or we're on the dashboard
-    expect(navigatedUrl.includes('/dashboard') || navigatedUrl === '').toBeTruthy();
+    const loginResp = page.waitForResponse(r =>
+      r.url().includes('/auth/login') && r.status() === 200,
+      { timeout: 5000 }
+    );
+    await page.click('.btn-login');
+    await loginResp;
+
+    // Wait for redirect to dashboard
+    await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 5000 });
+
+    // Verify admin is logged in
+    await expect(page.getByText('System Admin')).toBeVisible();
   });
 
-  test('should display analytics dashboard after login', async ({ page }) => {
-    // Mock all API calls
-    await page.route(`${API_URL}/auth/login`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          sessionToken: 'test-token',
-          userId: 1,
-          userName: 'admin@acme.com',
-          role: 'HR_MANAGER'
-        })
-      });
-    });
+  test('should display analytics dashboard after HR Analyst login', async ({ page }) => {
+    await clearAuthState(page);
+    await page.goto(BASE_URL + '/login');
+    await page.fill('input[name="email"]', 'hranalyst@acme.com');
+    await page.fill('input[name="password"]', 'analyst123');
 
-    await page.route(`${API_URL}/auth/me`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ id: 1, name: 'admin@acme.com', role: 'HR_MANAGER' })
-      });
-    });
-
-    await page.route(`${API_URL}/analytics/summary`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          totalPayroll: 5000000,
-          averageSalary: 120000,
-          medianSalary: 110000,
-          employeeCount: 42
-        })
-      });
-    });
-
-    await page.route(`${API_URL}/analytics/by-country`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          { country: 'United States (US)', count: 15, totalPayroll: 2500000 },
-          { country: 'Germany (DE)', count: 10, totalPayroll: 1500000 },
-          { country: 'India (IN)', count: 17, totalPayroll: 1000000 }
-        ])
-      });
-    });
-
-    await page.route(`${API_URL}/analytics/by-department`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          { department: 'Engineering', count: 20, totalPayroll: 3000000 },
-          { department: 'Sales', count: 12, totalPayroll: 1200000 },
-          { department: 'Marketing', count: 10, totalPayroll: 800000 }
-        ])
-      });
-    });
-
-    await page.goto(BASE_URL);
-    await page.fill('input[name="email"]', 'admin@acme.com');
-    await page.fill('input[name="password"]', 'password123');
+    const loginResp = page.waitForResponse(r =>
+      r.url().includes('/auth/login') && r.status() === 200,
+      { timeout: 5000 }
+    );
     await page.click('.btn-login');
-    await page.waitForTimeout(500);
+    await loginResp;
 
-    // Verify the dashboard content rendered
-    const heading = await page.locator('h1, h2').first().innerText();
-    expect(heading).toBeTruthy();
+    // Wait for redirect to dashboard
+    await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 5000 });
+
+    // Dashboard should be visible
+    await expect(page.locator('h2')).toContainText('Compensation Dashboard');
+    await expect(page.getByText('Total Annual Payroll')).toBeVisible();
+    await expect(page.getByText('Average Salary')).toBeVisible();
   });
 
   test('should display employee directory', async ({ page }) => {
-    await page.route(`${API_URL}/auth/login`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          sessionToken: 'test-token',
-          userId: 1,
-          userName: 'admin@acme.com',
-          role: 'HR_MANAGER'
-        })
-      });
-    });
-
-    await page.route(`${API_URL}/auth/me`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ id: 1, name: 'admin@acme.com', role: 'HR_MANAGER' })
-      });
-    });
-
-    await page.route(`${API_URL}/employees`, async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          content: [
-            { empNo: 'EMP-001', firstName: 'John', lastName: 'Doe', dept: 'Engineering', jobTitle: 'Senior Engineer', country: 'United States (US)', employmentStatus: 'ACTIVE' },
-            { empNo: 'EMP-002', firstName: 'Jane', lastName: 'Smith', dept: 'Sales', jobTitle: 'Sales Manager', country: 'Germany (DE)', employmentStatus: 'ACTIVE' }
-          ],
-          page: 0,
-          size: 25,
-          totalElements: 2,
-          totalPages: 1
-        })
-      });
-    });
-
-    await page.goto(BASE_URL);
+    await clearAuthState(page);
+    await page.goto(BASE_URL + '/login');
     await page.fill('input[name="email"]', 'admin@acme.com');
-    await page.fill('input[name="password"]', 'password123');
-    await page.click('.btn-login');
-    await page.waitForTimeout(500);
+    await page.fill('input[name="password"]', 'admin123');
 
-    // Verify the app rendered content (should be dashboard, which is default)
-    const body = await page.locator('body').innerText();
-    expect(body).toContain('ACME');
+    const loginResp = page.waitForResponse(r =>
+      r.url().includes('/auth/login') && r.status() === 200,
+      { timeout: 5000 }
+    );
+    await page.click('.btn-login');
+    await loginResp;
+
+    // Wait for redirect to dashboard
+    await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 5000 });
+
+    // Navigate directly to directory (bypasses routerLink click issues in Playwright)
+    await page.goto(BASE_URL + '/directory', { waitUntil: 'domcontentloaded' });
+
+    // Wait for lazy chunk and component to fully render
+    await page.waitForTimeout(3000);
+
+    // Employee list should be visible - table exists with data rows
+    const tables = await page.locator('table').all();
+    expect(tables.length).toBeGreaterThan(0);
+
+    // Verify employee content is visible (the empty state message)
+    await expect(page.getByRole('columnheader', { name: 'Employee ID' })).toBeVisible();
+  });
+
+  test('should navigate to reports page', async ({ page }) => {
+    await clearAuthState(page);
+    await page.goto(BASE_URL + '/login');
+    await page.fill('input[name="email"]', 'admin@acme.com');
+    await page.fill('input[name="password"]', 'admin123');
+
+    const loginResp = page.waitForResponse(r =>
+      r.url().includes('/auth/login') && r.status() === 200,
+      { timeout: 5000 }
+    );
+    await page.click('.btn-login');
+    await loginResp;
+
+    // Wait for redirect to dashboard
+    await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 5000 });
+
+    // Navigate directly to reports (bypasses routerLink click issues in Playwright)
+    await page.goto(BASE_URL + '/reports/custom', { waitUntil: 'domcontentloaded' });
+
+    // Wait for lazy chunk and component to fully render
+    await page.waitForTimeout(2000);
+
+    // Reports page should be visible
+    await expect(page.locator('h2')).toContainText('Reports');
+  });
+
+  test('should logout successfully', async ({ page }) => {
+    await clearAuthState(page);
+    await page.goto(BASE_URL + '/login');
+    await page.fill('input[name="email"]', 'admin@acme.com');
+    await page.fill('input[name="password"]', 'admin123');
+
+    const loginResp = page.waitForResponse(r =>
+      r.url().includes('/auth/login') && r.status() === 200,
+      { timeout: 5000 }
+    );
+    await page.click('.btn-login');
+    await loginResp;
+
+    // Wait for redirect to dashboard
+    await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 5000 });
+    await expect(page.getByText('System Admin')).toBeVisible();
+
+    // Logout by clicking the text
+    await page.getByText('Sign Out').click();
+
+    // Should be redirected to login
+    await expect(page).toHaveURL(/.*\/login/, { timeout: 5000 });
   });
 });

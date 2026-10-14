@@ -9,5 +9,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     });
     return next(cloned);
   }
+
+  // For API requests, clone with withCredentials to ensure cookies are sent
+  if (req.url.includes('/api/')) {
+    const cloned = req.clone({
+      withCredentials: true
+    });
+    return next(cloned);
+  }
+
   return next(req);
 };
