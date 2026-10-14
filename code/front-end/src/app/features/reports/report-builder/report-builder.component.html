@@ -37,6 +37,18 @@
         </tbody>
       </table>
     </div>
+  } @if (selectedTemplate === 'level-distribution') {
+    <div class="results-table">
+      <h3>Salaries by Job Level</h3>
+      <table class="data-table">
+        <thead><tr><th>Job Level</th><th>Employee Count</th><th>Avg Salary</th><th>Min Salary</th><th>Max Salary</th></tr></thead>
+        <tbody>
+          @for (item of jobLevelData; track item.jobLevel) {
+            <tr><td>{{ item.jobLevel }}</td><td>{{ item.count }}</td><td>${{ (item.avgSalary / 1000).toFixed(0) }}K</td><td>${{ (item.minSalary / 1000).toFixed(0) }}K</td><td>${{ (item.maxSalary / 1000).toFixed(0) }}K</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 
   <!-- Export Button -->

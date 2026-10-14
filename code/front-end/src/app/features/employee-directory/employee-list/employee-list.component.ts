@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs'
 import { EmployeeService, PaginatedResponse } from "../../../core/services/employee.service";
 import { Employee } from "../../../core/models/employee.model";
 import { NotificationService } from "../../../core/services/notification.service";
+import { AuthService } from "../../../core/auth/auth.service";
 
 @Component({
   standalone: true,
@@ -38,7 +39,8 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
 
   constructor(
     private employeeService: EmployeeService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +54,18 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
       this.currentPage = 0;
       this.loadEmployees();
     });
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  editEmployee(id: number): void {
+    window.location.href = `/salary/${id}`;
+  }
+
+  viewEmployee(id: number): void {
+    window.location.href = `/salary/${id}`;
   }
 
   loadEmployees(): void {
@@ -72,6 +86,14 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadEmployees();
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    for (let i = 0; i < this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   onSearch(query: string): void {

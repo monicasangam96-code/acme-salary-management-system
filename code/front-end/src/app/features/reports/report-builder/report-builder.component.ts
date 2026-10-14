@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AnalyticsService, DepartmentBreakdown, CountryBreakdown } from "../../../core/services/analytics.service";
+import { AnalyticsService, DepartmentBreakdown, CountryBreakdown, JobLevelBreakdown } from "../../../core/services/analytics.service";
 import { ReportService } from "../../../core/services/report.service";
 
 @Component({
@@ -28,6 +28,7 @@ export class ReportBuilderComponent implements OnInit {
   selectedTemplate = '';
   countryData: CountryBreakdown[] = [];
   deptData: DepartmentBreakdown[] = [];
+  jobLevelData: JobLevelBreakdown[] = [];
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -41,6 +42,8 @@ export class ReportBuilderComponent implements OnInit {
       this.analyticsService.getByCountry().subscribe(d => this.countryData = d);
     } else if (this.selectedTemplate === 'highest-departments') {
       this.analyticsService.getByDepartment().subscribe(d => this.deptData = d);
+    } else if (this.selectedTemplate === 'level-distribution') {
+      this.analyticsService.getByJobLevel().subscribe(d => this.jobLevelData = d);
     }
   }
 
