@@ -19,18 +19,14 @@ export interface AuthResponse {
 export class AuthService {
   private currentUser$: BehaviorSubject<AuthResponse | null> = new BehaviorSubject<AuthResponse | null>(null);
 
-  // Tracks whether checkSession() has completed its initial check — starts as false
-  private sessionChecked$ = new Subject<boolean>();
-  // Use BehaviorSubject with initial value so AuthGuard can always get a value
-  private _sessionChecked$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  // Track if we've ever had a valid user to prevent reset by failed checkSession calls
+  // Behaviorsubject starts as false — tells guard "not yet checked"
+  private _sessionChecked$ = new BehaviorSubject<boolean>(false);
+  // Tracks if we've ever had a valid user to prevent reset on failed checkSession
   private _hasValidUser = false;
 
   private router = inject(Router);
 
   constructor(private http: HttpClient) {
-    // Restore cached auth from sessionStorage (persists across page reloads)
     this._restoreFromStorage();
     this.checkSession();
   }
@@ -42,27 +38,20 @@ export class AuthService {
     return this.currentUser$.value;
   }
 
-  /** Returns whether session check has completed */
+  /** Returns whether session check has completed. BehaviorSubject always has a value. */
   isSessionCheckedNow(): boolean {
-    return this._sessionChecked$.value;
+    return this._sessionChecked$.getValue();
   }
 
-  /** Returns whether the session check has completed. Used by AuthGuard. */
-  get isSessionChecked(): Observable<boolean> {
-    return this._sessionChecked$.asObservable();
-  }
+  get isSessionChecked(): Observable<boolean> { return this._sessionChecked$.asObservable(); }
 
-  /** Persist user to localStorage (survives page reloads more reliably) */
   private _persistToStorage(): void {
     const user = this.currentUser$.value;
     if (user) {
-      try {
-        localStorage.setItem('acme_auth', JSON.stringify(user));
-      } catch {}
+      try { localStorage.setItem('acme_auth', JSON.stringify(user)); } catch {}
     }
   }
 
-  /** Restore user from localStorage */
   private _restoreFromStorage(): void {
     try {
       const stored = localStorage.getItem('acme_auth');
@@ -74,7 +63,6 @@ export class AuthService {
     } catch {}
   }
 
-  /** Clear persisted auth */
   private _clearStorage(): void {
     try { localStorage.removeItem('acme_auth'); } catch {}
   }
@@ -94,26 +82,21 @@ export class AuthService {
 
   logout(): void {
     this.http.post(`${API_PATH}/auth/logout`, {}).subscribe({
-      next: () => {
-        this.currentUser$.next(null);
-        this._hasValidUser = false;
-        this._sessionChecked$.next(false);
-        this._clearStorage();
-      },
-      error: () => {
-        // Still clear local state even if server call fails
-        this.currentUser$.next(null);
-        this._hasValidUser = false;
-        this._sessionChecked$.next(false);
-        this._clearStorage();
-      }
+      next: () => this._clearState(),
+      error: () => this._clearState()
     });
+  }
+
+  private _clearState(): void {
+    this.currentUser$.next(null);
+    this._hasValidUser = false;
+    this._sessionChecked$.next(false);
+    this._clearStorage();
   }
 
   checkSession(): void {
     // If we already have a valid user from login/storage, don't overwrite with failed session check
     if (this.currentUser$.value !== null && this._hasValidUser) {
-      // Session is already established from login — ensure checked flag is set
       this._sessionChecked$.next(true);
       return;
     }
@@ -128,7 +111,6 @@ export class AuthService {
             role: res.role as 'HR_MANAGER' | 'HR_ANALYST'
           };
 
-          // Only set user if we haven't already had a valid user from login/storage
           if (!this._hasValidUser) {
             this.currentUser$.next(authRes);
             this._hasValidUser = true;
@@ -142,7 +124,6 @@ export class AuthService {
           if (!this._hasValidUser && !hasCachedUser) {
             this.currentUser$.next(null);
           } else if (hasCachedUser && !this.currentUser$.value) {
-            // Restore from storage on error since we have cached data but no currentUser
             try {
               const stored = JSON.parse(localStorage.getItem('acme_auth')!);
               this.currentUser$.next(stored);

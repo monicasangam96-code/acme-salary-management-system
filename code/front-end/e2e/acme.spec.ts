@@ -49,7 +49,7 @@ test.describe('ACME Salary Management E2E Tests', () => {
     // Wait for redirect to dashboard
     await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 5000 });
 
-    // Dashboard should be visible
+    // Dashboard should be visible with real analytics data
     await expect(page.locator('h2')).toContainText('Compensation Dashboard');
     await expect(page.getByText('Total Annual Payroll')).toBeVisible();
     await expect(page.getByText('Average Salary')).toBeVisible();
@@ -81,8 +81,12 @@ test.describe('ACME Salary Management E2E Tests', () => {
     const tables = await page.locator('table').all();
     expect(tables.length).toBeGreaterThan(0);
 
-    // Verify employee content is visible (the empty state message)
+    // Verify employee content is visible (column header confirms component loaded)
     await expect(page.getByRole('columnheader', { name: 'Employee ID' })).toBeVisible();
+
+    // Verify actual seeded data shows up (at least some employee names)
+    const bodyText = await page.evaluate(() => document.body.innerText);
+    expect(bodyText).toContain('System Admin');
   });
 
   test('should navigate to reports page', async ({ page }) => {
@@ -131,7 +135,7 @@ test.describe('ACME Salary Management E2E Tests', () => {
     // Logout by clicking the text
     await page.getByText('Sign Out').click();
 
-    // Should be redirected to login
+    // Should be redirected to login (with returnUrl query param)
     await expect(page).toHaveURL(/.*\/login/, { timeout: 5000 });
   });
 });
