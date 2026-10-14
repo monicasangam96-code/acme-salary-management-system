@@ -33,6 +33,7 @@
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
+    "karma-puppeteer-launcher": "^1.0.4",
     "karma-spec-reporter": "~0.0.36",
     "playwright": "^1.42.0",
     "typescript": "~5.3.0"

@@ -26,27 +26,26 @@ describe('AnalyticsService', () => {
   describe('getSummary()', () => {
     it('should return analytics summary with default params', () => {
       const mockSummary = {
-        totalEmployees: 100, averageSalary: 75000, medianSalary: 70000,
-        maxSalary: 120000, minSalary: 45000, currencyCode: 'USD'
+        totalPayroll: 750000, averageSalary: 75000, medianSalary: 70000, employeeCount: 100
       };
 
       service.getSummary().subscribe(summary => {
-        expect(summary.totalEmployees).toBe(100);
+        expect(summary.employeeCount).toBe(100);
         expect(summary.averageSalary).toBe(75000);
       });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/analytics/summary');
-      expect(req.method).toBe('GET');
+      expect(req.request.method).toBe('GET');
       req.flush(mockSummary);
     });
 
     it('should include filter params when provided', () => {
-      const mockSummary = { totalEmployees: 10, averageSalary: 80000, medianSalary: 75000, maxSalary: 95000, minSalary: 60000, currencyCode: 'USD' };
+      const mockSummary = { totalPayroll: 800000, averageSalary: 80000, medianSalary: 75000, employeeCount: 10 };
 
       service.getSummary('US', 'Engineering').subscribe();
       const req = httpMock.expectOne((r) => r.url === 'http://localhost:8080/api/v1/analytics/summary');
-      expect(req.params.get('country')).toBe('US');
-      expect(req.params.get('dept')).toBe('Engineering');
+      expect(req.request.params.get('country')).toBe('US');
+      expect(req.request.params.get('dept')).toBe('Engineering');
       req.flush(mockSummary);
     });
   });
@@ -64,7 +63,7 @@ describe('AnalyticsService', () => {
       });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/analytics/by-department');
-      expect(req.method).toBe('GET');
+      expect(req.request.method).toBe('GET');
       req.flush(mockData);
     });
   });
@@ -82,7 +81,7 @@ describe('AnalyticsService', () => {
       });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/analytics/by-country');
-      expect(req.method).toBe('GET');
+      expect(req.request.method).toBe('GET');
       req.flush(mockData);
     });
   });
@@ -100,7 +99,7 @@ describe('AnalyticsService', () => {
       });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/analytics/by-job-level');
-      expect(req.method).toBe('GET');
+      expect(req.request.method).toBe('GET');
       req.flush(mockData);
     });
   });
@@ -118,7 +117,7 @@ describe('AnalyticsService', () => {
       });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/analytics/by-currency');
-      expect(req.method).toBe('GET');
+      expect(req.request.method).toBe('GET');
       req.flush(mockCurrencies);
     });
   });

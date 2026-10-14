@@ -35,9 +35,9 @@ describe('EmployeeService', () => {
       });
 
       const req = httpMock.expectOne((req) => req.url === 'http://localhost:8080/api/v1/employees');
-      expect(req.method).toBe('GET');
-      expect(req.params.get('page')).toBe('0');
-      expect(req.params.get('size')).toBe('25');
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('page')).toBe('0');
+      expect(req.request.params.get('size')).toBe('25');
       req.flush(mockResponse);
     });
 
@@ -50,10 +50,10 @@ describe('EmployeeService', () => {
         .subscribe();
 
       const req = httpMock.expectOne((req) => req.url === 'http://localhost:8080/api/v1/employees');
-      expect(req.params.get('search')).toBe('Smith');
-      expect(req.params.get('country')).toBe('United States (US)');
-      expect(req.params.get('dept')).toBe('Engineering');
-      expect(req.params.get('status')).toBe('ACTIVE');
+      expect(req.request.params.get('search')).toBe('Smith');
+      expect(req.request.params.get('country')).toBe('United States (US)');
+      expect(req.request.params.get('dept')).toBe('Engineering');
+      expect(req.request.params.get('status')).toBe('ACTIVE');
       req.flush(mockResponse);
     });
   });
@@ -74,7 +74,7 @@ describe('EmployeeService', () => {
       });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/employees/1');
-      expect(req.method).toBe('GET');
+      expect(req.request.method).toBe('GET');
       req.flush(mockEmployee);
     });
   });
@@ -89,12 +89,12 @@ describe('EmployeeService', () => {
         active: true
       };
 
-      service.create(newEmp).subscribe(emp => {
+      service.create(newEmp as any).subscribe(emp => {
         expect(emp.empNo).toBe('EMP-002');
       });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/employees');
-      expect(req.method).toBe('POST');
+      expect(req.request.method).toBe('POST');
       req.flush({ ...newEmp, id: 2 });
     });
   });
@@ -105,7 +105,7 @@ describe('EmployeeService', () => {
       service.delete(5).subscribe(() => { deleted = true; });
 
       const req = httpMock.expectOne('http://localhost:8080/api/v1/employees/5');
-      expect(req.method).toBe('DELETE');
+      expect(req.request.method).toBe('DELETE');
       req.flush(null);
       expect(deleted).toBe(true);
     });
