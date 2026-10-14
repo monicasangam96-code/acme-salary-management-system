@@ -9,18 +9,19 @@
     </div>
   </header>
 
-  <!-- Side Rail -->
-  <nav class="side-rail">
-    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-    <a routerLink="/directory" routerLinkActive="active">Directory</a>
-    <a routerLink="/reports" routerLinkActive="active">Reports</a>
-    @if (authService.currentUser | async) {
-      <a (click)="onLogout()" class="logout-link">Sign Out</a>
-    }
-  </nav>
+  <!-- Side Rail + Content -->
+  <div class="body-row">
+    <nav class="side-rail">
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+      <a routerLink="/directory" routerLinkActive="active">Directory</a>
+      <a routerLink="/reports" routerLinkActive="active">Reports</a>
+      @if (authService.currentUser | async) {
+        <a (click)="onLogout()" class="logout-link">Sign Out</a>
+      }
+    </nav>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>

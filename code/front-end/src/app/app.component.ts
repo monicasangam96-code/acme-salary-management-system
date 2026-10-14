@@ -21,6 +21,7 @@ import { filter, Subscription } from 'rxjs';
     .side-rail a.active { background: #e7f5ff; color: #0d6efd; border-right: 3px solid #0d6efd; font-weight: 500; }
     .logout-link { color: #dc3545 !important; margin-top: 16px; cursor: pointer; }
     .main-content { flex: 1; overflow: auto; background: #f8f9fa; }
+    .body-row { display: flex; flex: 1; height: 0; }
   `]
 })
 export class AppComponent implements OnInit, OnDestroy {
