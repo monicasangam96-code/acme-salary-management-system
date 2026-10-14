@@ -42,6 +42,8 @@ curl http://localhost:8080/api/v1/health
 
 Click **Sign In** → redirect to `/dashboard`
 
+> ⚠️ **Security note:** These are demo/test credentials only. Passwords in source code are BCrypt-hashed (`PasswordEncoder` bean), never stored as plaintext. Do not use these values in production.
+
 ## Step 4: Dashboard Overview (1 min)
 
 At `http://localhost:4200/dashboard`:
@@ -159,6 +161,8 @@ npx playwright test
 |-------|-------|
 | Email | `hranalyst@acme.com` |
 | Password | `analyst123` |
+
+> ⚠️ **Security note:** Demo/test credentials only. Never store plaintext passwords in source code — this project uses Spring Security's BCryptPasswordEncoder for all credential hashing.
 
 **Narration:** "The HR Analyst role has read + edit access — they can view all data and add salary entries but cannot delete employees. Notice the delete button is hidden in the Actions column."
 

@@ -6,7 +6,7 @@ import { CountryBreakdown, DepartmentBreakdown, JobLevelBreakdown, AnalyticsSumm
 // Re-export these types so consumers can import them from this module
 export type { CountryBreakdown, DepartmentBreakdown, JobLevelBreakdown, AnalyticsSummary, CurrencyItem };
 
-const API_URL = 'http://localhost:8080/api/v1';
+const API_PATH = '/api/v1';
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
@@ -17,20 +17,20 @@ export class AnalyticsService {
     if (country) params = params.set('country', country);
     if (dept) params = params.set('dept', dept);
     if (currency) params = params.set('currency', currency);
-    return this.http.get<AnalyticsSummary>(`${API_URL}/analytics/summary`, { params });
+    return this.http.get<AnalyticsSummary>(`${API_PATH}/analytics/summary`, { params });
   }
 
   getByCountry(currency?: string): Observable<CountryBreakdown[]> {
     let params = new HttpParams();
     if (currency) params = params.set('currency', currency);
-    return this.http.get<CountryBreakdown[]>(`${API_URL}/analytics/by-country`, { params });
+    return this.http.get<CountryBreakdown[]>(`${API_PATH}/analytics/by-country`, { params });
   }
 
   getByDepartment(country?: string, currency?: string): Observable<DepartmentBreakdown[]> {
     let params = new HttpParams();
     if (country) params = params.set('country', country);
     if (currency) params = params.set('currency', currency);
-    return this.http.get<DepartmentBreakdown[]>(`${API_URL}/analytics/by-department`, { params });
+    return this.http.get<DepartmentBreakdown[]>(`${API_PATH}/analytics/by-department`, { params });
   }
 
   getByJobLevel(country?: string, dept?: string, currency?: string): Observable<JobLevelBreakdown[]> {
@@ -38,10 +38,10 @@ export class AnalyticsService {
     if (country) params = params.set('country', country);
     if (dept) params = params.set('dept', dept);
     if (currency) params = params.set('currency', currency);
-    return this.http.get<JobLevelBreakdown[]>(`${API_URL}/analytics/by-job-level`, { params });
+    return this.http.get<JobLevelBreakdown[]>(`${API_PATH}/analytics/by-job-level`, { params });
   }
 
   getCurrencies(): Observable<CurrencyItem[]> {
-    return this.http.get<CurrencyItem[]>(`${API_URL}/analytics/by-currency`);
+    return this.http.get<CurrencyItem[]>(`${API_PATH}/analytics/by-currency`);
   }
 }

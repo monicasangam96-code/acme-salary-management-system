@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-const API_URL = 'http://localhost:8080/api/v1';
+const API_PATH = '/api/v1';
 
 @Injectable({ providedIn: 'root' })
 export class ReportService {
@@ -14,7 +14,7 @@ export class ReportService {
     if (country) params = params.set('country', country);
     if (dept) params = params.set('dept', dept);
 
-    this.http.get(`${API_URL}/reports/csv`, { params, responseType: 'blob' })
+    this.http.get(`${API_PATH}/reports/csv`, { params, responseType: 'blob' })
       .subscribe({
         next: (blob: Blob) => {
           const url = window.URL.createObjectURL(blob);
