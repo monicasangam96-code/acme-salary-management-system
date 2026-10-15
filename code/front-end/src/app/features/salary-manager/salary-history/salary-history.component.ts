@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../../core/services/employee.service';
 
@@ -18,14 +18,39 @@ import { EmployeeService } from '../../../core/services/employee.service';
     .empty { text-align: center; color: #adb5bd; padding: 16px; }
   `]
 })
-export class SalaryHistoryComponent implements OnInit {
+export class SalaryHistoryComponent implements OnChanges {
   @Input() employeeId!: number;
+  /** External data source — when provided, used instead of auto-fetching. */
+  @Input() data: any[] | null = null;
+
   salaries: any[] = [];
+  private _dataInputActive = false;
 
   constructor(private employeeService: EmployeeService) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data']) {
+      const val = changes['data'].currentValue;
+      this._dataInputActive = true;
+      this.salaries = val || [];
+    }
+    // If no data input and employeeId changed, re-fetch
+    if (!this._dataInputActive && changes['employeeId']) {
+      this.fetch();
+    }
+  }
+
   ngOnInit(): void {
-    this.employeeService.getSalaryHistory(this.employeeId).subscribe((s: any) => this.salaries = s);
+    // Auto-fetch only when there's no external data
+    if (!this._dataInputActive) {
+      this.fetch();
+    }
+  }
+
+  fetch(): void {
+    if (!this._dataInputActive) {
+      this.employeeService.getSalaryHistory(this.employeeId).subscribe((s: any) => this.salaries = s);
+    }
   }
 
   getCurrencySymbol(code: string): string {

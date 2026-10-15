@@ -40,6 +40,7 @@ public class SalaryService {
         return records.stream().map(r -> {
             var resp = new SalarySummaryResponse();
             resp.setId(r.getId());
+            resp.setEmployeeId(r.getEmployeeId());
             resp.setSalaryAmount(r.getSalaryAmount());
             resp.setCurrencyCode(r.getCurrencyCode());
             resp.setEffectiveDate(r.getEffectiveDate());
@@ -80,15 +81,16 @@ public class SalaryService {
         validator.validateCurrencyCode(request.currencyCode(), validCodes);
         validator.validateSalary(request.salaryAmount(), "salary_amount");
 
-        // Set previous CURRENT salary to SUPERSEDED
-        var currentSalary = salaryRepository.findCurrentByEmployeeId(emp.getId());
-        if (currentSalary.isPresent()) {
-            var old = currentSalary.get();
-            old.setStatus(Salary.SalaryStatus.SUPERSEDED);
-            salaryRepository.save(old);
-            auditor.logUpdate(
-                    emp.getId(), "salaries", old.getId(),
-                    "status", "CURRENT", "SUPERSEDED", 1L);
+        // Set ALL previous CURRENT salaries to SUPERSEDED (handles edge cases with duplicate rows)
+        var currentSalaries = salaryRepository.findAllCurrentByEmployeeId(emp.getId());
+        BigDecimal prevAmount = null;
+        for (var old : currentSalaries) {
+            if (old.getStatus() != Salary.SalaryStatus.SUPERSEDED) {
+                prevAmount = old.getSalaryAmount(); // keep the most recent one
+                old.setStatus(Salary.SalaryStatus.SUPERSEDED);
+                salaryRepository.save(old);
+                auditor.logUpdate(emp.getId(), "salaries", old.getId(), "status", "CURRENT", "SUPERSEDED", 1L);
+            }
         }
 
         // Create new salary record
@@ -98,7 +100,7 @@ public class SalaryService {
         salary.setCurrencyCode(request.currencyCode());
         salary.setEffectiveDate(request.effectiveDate());
         salary.setStatus(Salary.SalaryStatus.CURRENT);
-        salary.setPreviousSalaryAmount(currentSalary.map(Salary::getSalaryAmount).orElse(null));
+        salary.setPreviousSalaryAmount(prevAmount);
         salary.setNotes(request.notes());
         salary.setUpdatedBy(1L);
 

@@ -15,7 +15,7 @@
     <!-- Salary History Tab -->
     @if (tab === 'salary') {
       <app-salary-entry-form [employeeId]="employeeId" (saved)="onSalarySaved()"></app-salary-entry-form>
-      <app-salary-history [employeeId]="employeeId"></app-salary-history>
+      <app-salary-history [employeeId]="employeeId" [data]="salaryHistory"></app-salary-history>
     }
 
     <!-- Payroll Records Tab -->

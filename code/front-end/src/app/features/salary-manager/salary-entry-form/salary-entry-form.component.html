@@ -25,6 +25,6 @@
       <label for="notes">Notes</label>
       <textarea id="notes" [(ngModel)]="notes" name="notes" rows="3"></textarea>
     </div>
-    <button type="submit" [disabled]="!formDir.valid" class="btn-save">Save Salary</button>
+    <button type="submit" [disabled]="!formDir.valid || saving" class="btn-save">{{ saving ? 'Saving...' : 'Save Salary' }}</button>
   </form>
 </div>

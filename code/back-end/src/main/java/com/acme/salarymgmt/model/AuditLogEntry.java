@@ -64,6 +64,7 @@ public class AuditLogEntry {
     public ChangeType getChangeType() { return changeType; }
     public void setChangeType(ChangeType changeType) { this.changeType = changeType; }
     public LocalDateTime getChangedAt() { return changedAt; }
+    public void setChangedAt(LocalDateTime changedAt) { this.changedAt = changedAt; }
     public Long getChangedBy() { return changedBy; }
     public void setChangedBy(Long changedBy) { this.changedBy = changedBy; }
 }

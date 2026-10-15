@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../../core/services/notification.service';
+import { SalaryService } from '../../../core/services/salary.service';
 
 @Component({
   standalone: true,
@@ -28,6 +29,7 @@ export class SalaryEntryFormComponent implements OnInit {
   effectiveDate = new Date().toISOString().split('T')[0];
   notes = '';
   submitted = false;
+  saving = false;
   currencies = [
     { code: 'USD', symbol: '$' },
     { code: 'EUR', symbol: '€' },
@@ -36,7 +38,10 @@ export class SalaryEntryFormComponent implements OnInit {
     { code: 'INR', symbol: '₹' },
   ];
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    private salaryService: SalaryService
+  ) {}
 
   ngOnInit(): void {
     // Default effective date to next month
@@ -49,10 +54,23 @@ export class SalaryEntryFormComponent implements OnInit {
     this.submitted = true;
     if (!this.salaryAmount || !this.effectiveDate) return;
 
-    // API call placeholder — in production, use SalaryService
-    console.log('Saving salary:', { employeeId: this.employeeId, salaryAmount: this.salaryAmount, currencyCode: this.currencyCode, effectiveDate: this.effectiveDate });
-
-    this.notificationService.success(`Salary updated for employee ${this.employeeId}`);
-    this.saved.emit();
+    this.saving = true;
+    this.salaryService.saveSalary({
+      employeeId: this.employeeId,
+      salaryAmount: this.salaryAmount,
+      currencyCode: this.currencyCode,
+      effectiveDate: this.effectiveDate,
+      notes: this.notes
+    }).subscribe({
+      next: () => {
+        this.notificationService.success('Salary saved successfully');
+        this.saved.emit();
+      },
+      error: (err) => {
+        this.notificationService.error('Failed to save salary');
+        console.error('Save salary failed:', err);
+      },
+      complete: () => { this.saving = false; }
+    });
   }
 }

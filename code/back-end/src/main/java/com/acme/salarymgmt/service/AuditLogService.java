@@ -26,6 +26,7 @@ public class AuditLogService implements Auditor {
         entry.setNewValue(newValue != null ? String.valueOf(newValue) : null);
         entry.setChangeType(AuditLogEntry.ChangeType.INSERT);
         entry.setChangedBy(actorId != null ? actorId : defaultUserId);
+        entry.setChangedAt(java.time.LocalDateTime.now());
         auditLogRepository.save(entry);
     }
 
@@ -41,6 +42,7 @@ public class AuditLogService implements Auditor {
         entry.setNewValue(newValue != null ? String.valueOf(newValue) : null);
         entry.setChangeType(AuditLogEntry.ChangeType.UPDATE);
         entry.setChangedBy(actorId != null ? actorId : defaultUserId);
+        entry.setChangedAt(java.time.LocalDateTime.now());
         auditLogRepository.save(entry);
     }
 
@@ -52,6 +54,7 @@ public class AuditLogService implements Auditor {
         entry.setRecordId(recordId);
         entry.setChangeType(AuditLogEntry.ChangeType.DELETE);
         entry.setChangedBy(actorId != null ? actorId : defaultUserId);
+        entry.setChangedAt(java.time.LocalDateTime.now());
         auditLogRepository.save(entry);
     }
 

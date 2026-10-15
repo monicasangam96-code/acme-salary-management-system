@@ -23,6 +23,9 @@ public interface SalaryRepository extends JpaRepository<Salary, Long> {
     @Query("SELECT s FROM Salary s WHERE s.employeeId = :employeeId AND s.status = 'CURRENT'")
     Optional<Salary> findCurrentByEmployeeId(@Param("employeeId") Long employeeId);
 
+    @Query("SELECT s FROM Salary s WHERE s.employeeId = :employeeId AND s.status = 'CURRENT'")
+    List<Salary> findAllCurrentByEmployeeId(@Param("employeeId") Long employeeId);
+
     @Query("SELECT new com.acme.salarymgmt.dto.response.AnalyticsSummaryResponse(" +
            "COALESCE(SUM(s.salaryAmount), 0)," +
            "COALESCE(AVG(s.salaryAmount), 0)," +

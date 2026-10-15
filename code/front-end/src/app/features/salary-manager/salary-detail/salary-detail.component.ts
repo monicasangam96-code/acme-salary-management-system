@@ -31,6 +31,7 @@ export class SalaryDetailComponent implements OnInit {
   tab = 'salary';
   employee: any;
   payroll: any[] = [];
+  salaryHistory: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +41,7 @@ export class SalaryDetailComponent implements OnInit {
   ngOnInit(): void {
     this.employeeId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadEmployee();
+    this.fetchSalaryHistory();
   }
 
   loadEmployee(): void {
@@ -48,7 +50,15 @@ export class SalaryDetailComponent implements OnInit {
     });
   }
 
+  fetchSalaryHistory(): void {
+    this.employeeService.getSalaryHistory(this.employeeId).subscribe((h: any[]) => {
+      this.salaryHistory = h;
+    });
+  }
+
   onSalarySaved(): void {
-    // Refresh salary history and KPI cards
+    // Re-fetch salary history so the new record appears in the table
+    this.fetchSalaryHistory();
+    this.loadEmployee();
   }
 }

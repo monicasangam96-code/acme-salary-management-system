@@ -39,10 +39,11 @@ public class EmployeeService {
         return page.map(emp -> {
             BigDecimal salaryAmount = null;
             String currencyCode = null;
-            var currentSalary = salaryRepository.findCurrentByEmployeeId(emp.getId());
-            if (currentSalary.isPresent()) {
-                salaryAmount = currentSalary.get().getSalaryAmount();
-                currencyCode = currentSalary.get().getCurrencyCode();
+            var currentSalaries = salaryRepository.findAllCurrentByEmployeeId(emp.getId());
+            if (!currentSalaries.isEmpty()) {
+                var top = currentSalaries.get(0);
+                salaryAmount = top.getSalaryAmount();
+                currencyCode = top.getCurrencyCode();
             }
             return new EmployeeSummaryResponse(
                     emp.getId(), emp.getEmpNo(), emp.getFirstName(), emp.getLastName(),
@@ -198,11 +199,11 @@ public class EmployeeService {
         resp.setCreatedBy(Long.valueOf(emp.getUpdatedBy() != null ? emp.getUpdatedBy().toString() : "1"));
         resp.setUpdatedAt(emp.getUpdatedAt());
         // Current salary
-        var current = salaryRepository.findCurrentByEmployeeId(emp.getId());
-        if (current.isPresent()) {
-            resp.setCurrentSalaryAmount(current.get().getSalaryAmount());
-            resp.setCurrentCurrencyCode(current.get().getCurrencyCode());
-            resp.setEffectiveDate(current.get().getEffectiveDate());
+        var currentSalaries = salaryRepository.findAllCurrentByEmployeeId(emp.getId());
+        if (!currentSalaries.isEmpty()) {
+            resp.setCurrentSalaryAmount(currentSalaries.get(0).getSalaryAmount());
+            resp.setCurrentCurrencyCode(currentSalaries.get(0).getCurrencyCode());
+            resp.setEffectiveDate(currentSalaries.get(0).getEffectiveDate());
         }
     }
 }
