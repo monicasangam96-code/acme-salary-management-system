@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACME Salary Management — Demo Slideshow</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a2e; color: #eee; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; min-height: 100vh; overflow: hidden;
+  }
+  .slide-container {
+    position: relative; width: 95vw; max-width: 1100px; text-align: center;
+  }
+  .slide-image {
+    width: 100%; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    transition: opacity 0.6s ease; background: #fff; min-height: 400px;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .slide-image img { width: 100%; height: auto; display: block; }
+  .slide-label {
+    margin-top: 16px; font-size: 20px; font-weight: 600; color: #e0e0e0;
+    min-height: 28px; transition: opacity 0.4s ease;
+  }
+  .slide-counter {
+    margin-top: 8px; font-size: 14px; color: #888;
+  }
+  .controls {
+    margin-top: 24px; display: flex; gap: 16px; justify-content: center; align-items: center;
+  }
+  .controls button {
+    padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 15px; font-weight: 600; background: #4361ee; color: #fff;
+    transition: background 0.2s;
+  }
+  .controls button:hover { background: #3a56d4; }
+  .controls button:disabled { background: #555; cursor: default; }
+  .controls button.play { background: #2ec4b6; }
+  .controls button.play:hover { background: #25b0a3; }
+  .progress-bar {
+    width: 100%; height: 4px; background: #333; border-radius: 2px; margin-top: 16px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #4361ee, #2ec4b6);
+    transition: width 0.6s ease; border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <div class="slide-image"><img id="slideImg" src="" alt="Demo Slide"></div>
+  <div class="slide-label" id="label"></div>
+  <div class="slide-counter" id="counter"></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div class="controls">
+    <button onclick="prev()">◀ Prev</button>
+    <button class="play" id="playBtn" onclick="togglePlay()">▶ Auto Play</button>
+    <button onclick="next()">Next ▶</button>
+  </div>
+</div>
+
+<script>
+const SLIDES = [
+  { img: "../code/front-end/e2e/screenshots/demo/01-login-page.png", label: "ACME Salary Management — Login Page" },
+  { img: "../code/front-end/e2e/screenshots/demo/02-dashboard-overview.png", label: "Dashboard Overview — Key salary metrics at a glance" },
+  { img: "../code/front-end/e2e/screenshots/demo/03-directory-all-active.png", label: "Employee Directory — All 35 Active Employees" },
+  { img: "../code/front-end/e2e/screenshots/demo/04-directory-filter-eng.png", label: "Directory Filter — Engineering Department" },
+  { img: "../code/front-end/e2e/screenshots/demo/05-directory-filter-us.png", label: "Directory Filter — United States (US)" },
+  { img: "../code/front-end/e2e/screenshots/demo/06-directory-filter-hr.png", label: "Directory Filter — HR Department" },
+  { img: "../code/front-end/e2e/screenshots/demo/07-directory-filter-japan.png", label: "Directory Filter — Japan (JP)" },
+  { img: "../code/front-end/e2e/screenshots/demo/08-directory-page-2.png", label: "Directory Pagination — Page 2 of Results" },
+  { img: "../code/front-end/e2e/screenshots/demo/09-report-country-salary.png", label: "Report — Average Salary by Country" },
+  { img: "../code/front-end/e2e/screenshots/demo/10-report-dept-payroll.png", label: "Report — Highest Departments by Payroll" },
+  { img: "../code/front-end/e2e/screenshots/demo/11-report-job-level.png", label: "Report — Salary Distribution by Job Level" },
+  { img: "../code/front-end/e2e/screenshots/demo/12-report-payroll-dept.png", label: "Report — Payroll Summary by Department" },
+  { img: "../code/front-end/e2e/screenshots/demo/13-salary-detail.png", label: "Salary Detail View — Employee compensation overview" },
+  { img: "../code/front-end/e2e/screenshots/demo/14-salary-history-tab.png", label: "Salary History — Complete change tracking" },
+  { img: "../code/front-end/e2e/screenshots/demo/15-payroll-tab.png", label: "Payroll Records — Historical payroll data" },
+  { img: "../code/front-end/e2e/screenshots/demo/16-directory-filter-us-eng.png", label: "Combined Filter — US + Engineering" },
+  { img: "../code/front-end/e2e/screenshots/demo/17-directory-filter-japan-it.png", label: "Combined Filter — Japan + IT" },
+];
+
+let current = 0;
+let playing = false;
+let timer = null;
+
+function showSlide(i) {
+  if (i < 0) i = SLIDES.length - 1;
+  if (i >= SLIDES.length) i = 0;
+  current = i;
+  const img = document.getElementById('slideImg');
+  img.style.opacity = 0;
+  setTimeout(() => { img.src = SLIDES[i].img; img.style.opacity = 1; }, 200);
+  document.getElementById('label').textContent = SLIDES[i].label;
+  document.getElementById('counter').textContent = `${i + 1} / ${SLIDES.length}`;
+  document.getElementById('progress').style.width = `${((i + 1) / SLIDES.length) * 100}%`;
+}
+
+function next() { showSlide(current + 1); }
+function prev() { showSlide(current - 1); }
+
+function togglePlay() {
+  playing = !playing;
+  const btn = document.getElementById('playBtn');
+  if (playing) {
+    btn.textContent = '⏸ Pause';
+    timer = setInterval(next, 3000);
+  } else {
+    btn.textContent = '▶ Auto Play';
+    clearInterval(timer);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') next();
+  if (e.key === 'ArrowLeft') prev();
+  if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+});
+
+showSlide(0);
+</script>
+</body>
+</html>

@@ -115,10 +115,62 @@ test('Reports - Job Level Distribution', async ({ page }) => {
   await capture(page, '11-report-job-level');
 });
 
+test('Reports - Payroll by Department', async ({ page }) => {
+  await login(page);
+  await page.getByRole('link', { name: 'Reports' }).click();
+  // Use highest-departments template (shows payroll by department)
+  await page.locator('.template-select').evaluate((el: HTMLSelectElement) => { el.value = 'highest-departments'; el.dispatchEvent(new Event('change')); });
+  await page.waitForSelector('.data-table tbody tr', { timeout: 10000 });
+  // Give chart time to render
+  await page.waitForTimeout(1500);
+  await capture(page, '12-report-payroll-dept');
+});
+
 // ===================== SALARY DETAILS SCREENSHOT =====================
 
 test('Salary - Detail View', async ({ page }) => {
   await login(page);
   await page.goto('/salary/2');
-  await capture(page, '12-salary-detail');
+  await capture(page, '13-salary-detail');
+});
+
+test('Salary - Salary History Tab', async ({ page }) => {
+  await login(page);
+  await page.goto('/salary/2');
+  await page.waitForSelector('.tabs button', { timeout: 5000 });
+  await page.locator('.tabs button').first().click();
+  await page.waitForTimeout(1000);
+  await capture(page, '14-salary-history-tab');
+});
+
+// ===================== ANALYTICS SCREENSHOT =====================
+
+test('Analytics Dashboard (HR Analyst)', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByLabel('Email').fill('analyst@acme.com');
+  await page.getByLabel('Password').fill('analyst123');
+  await page.getByRole('button', { name: 'Sign In' }).click();
+  // Wait for any post-login content (dashboard or analytics view)
+  await expect(page.locator('.dashboard-overview, .analytics-view, h1, h2')).toBeVisible({ timeout: 5000 });
+  await capture(page, '15-analytics-dashboard');
+});
+
+// ===================== ADDITIONAL DIRECTORY FILTERS =====================
+
+test('Directory - Filter by Engineering (United States)', async ({ page }) => {
+  await login(page);
+  await page.getByRole('link', { name: 'Directory' }).click();
+  await page.locator('.filter-select').nth(0).evaluate((el: HTMLSelectElement) => { el.value = 'United States (US)'; el.dispatchEvent(new Event('change')); });
+  await page.waitForTimeout(500);
+  await page.locator('.filter-select').nth(1).evaluate((el: HTMLSelectElement) => { el.value = 'Engineering'; el.dispatchEvent(new Event('change')); });
+  await capture(page, '16-directory-filter-us-eng');
+});
+
+test('Directory - Filter by Japan (IT)', async ({ page }) => {
+  await login(page);
+  await page.getByRole('link', { name: 'Directory' }).click();
+  await page.locator('.filter-select').nth(0).evaluate((el: HTMLSelectElement) => { el.value = 'Japan (JP)'; el.dispatchEvent(new Event('change')); });
+  await page.waitForTimeout(500);
+  await page.locator('.filter-select').nth(1).evaluate((el: HTMLSelectElement) => { el.value = 'IT'; el.dispatchEvent(new Event('change')); });
+  await capture(page, '17-directory-filter-japan-it');
 });
